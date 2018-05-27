@@ -1,0 +1,4 @@
+[submodule "src/Avalonia.HtmlRenderer/external"]
+	path = external
+	url = https://github.com/AvaloniaUI/HTML-Renderer.git
+	branch = perspex-pcl
