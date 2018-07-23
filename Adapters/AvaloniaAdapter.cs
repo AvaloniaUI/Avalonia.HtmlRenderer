@@ -96,8 +96,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         protected override RImage ImageFromStreamInt(Stream memoryStream)
         {
-            //TODO: Implement bitmap loader
-            return null;
+            return new ImageAdapter(new Bitmap(memoryStream));
         }
 
         protected override RFont CreateFontInt(string family, double size, RFontStyle style)
