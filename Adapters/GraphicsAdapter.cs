@@ -189,17 +189,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override RBrush GetTextureBrush(RImage image, RRect dstRect, RPoint translateTransformLocation)
         {
-            //TODO: Implement texture brush
-            return AvaloniaAdapter.Instance.GetSolidBrush(Util.Convert(Colors.Magenta));
+            var brush = new ImageBrush(((ImageAdapter)image).Image);
+            brush.Stretch = Stretch.None;
+            brush.TileMode = TileMode.Tile;
+            brush.DestinationRect = new RelativeRect(Util.Convert(dstRect).Translate(Util.Convert(translateTransformLocation) - new Point()), RelativeUnit.Absolute);
 
-            //var brush = new ImageBrush(((ImageAdapter)image).Image);
-            //brush.Stretch = Stretch.None;
-            //brush.TileMode = TileMode.Tile;
-            //brush.Viewport = Utils.Convert(dstRect);
-            //brush.ViewportUnits = BrushMappingMode.Absolute;
-            //brush.Transform = new TranslateTransform(translateTransformLocation.X, translateTransformLocation.Y);
-            //brush.Freeze();
-            //return new BrushAdapter(brush);
+            return new BrushAdapter(brush);
         }
         
         public override RGraphicsPath GetGraphicsPath()

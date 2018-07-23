@@ -116,6 +116,7 @@ namespace Avalonia.Controls.Html
         static HtmlControl()
         {
             FocusableProperty.OverrideDefaultValue(typeof(HtmlControl), true);
+            AffectsRender(TextProperty);
         }
 
         /// <summary>
@@ -124,12 +125,12 @@ namespace Avalonia.Controls.Html
         protected HtmlControl()
         {
             _htmlContainer = new HtmlContainer();
-            _htmlContainer.LoadComplete += (_, e) => OnLoadComplete(e);
-            _htmlContainer.LinkClicked += (_, e) => OnLinkClicked(e);
-            _htmlContainer.RenderError += (_, e) => OnRenderError(e);
-            _htmlContainer.Refresh += (_, e) => OnRefresh(e);
-            _htmlContainer.StylesheetLoad += (_, e) => OnStylesheetLoad(e);
-            _htmlContainer.ImageLoad += (_, e) => OnImageLoad(e);
+            _htmlContainer.LoadComplete += OnLoadComplete;
+            _htmlContainer.LinkClicked += OnLinkClicked;
+            _htmlContainer.RenderError += OnRenderError;
+            _htmlContainer.Refresh += OnRefresh;
+            _htmlContainer.StylesheetLoad += OnStylesheetLoad;
+            _htmlContainer.ImageLoad += OnImageLoad;
         }
 
         //Hack for adapter
@@ -434,6 +435,7 @@ namespace Avalonia.Controls.Html
                 _htmlContainer.HandleMouseDoubleClick(this, e);
         }
         */
+
         /// <summary>
         /// Handle key down event for selection, copy and scrollbars handling.
         /// </summary>
@@ -560,15 +562,13 @@ namespace Avalonia.Controls.Html
         }
 
 
-        //TODO: Implement CheckAccess calls
-        /*
         private void OnLoadComplete(object sender, EventArgs e)
         {
 
             if (CheckAccess())
                 OnLoadComplete(e);
             else
-                Dispatcher.UIThread.Invoke(new Action<HtmlLinkClickedEventArgs>(OnLinkClicked), e);
+                Dispatcher.UIThread.InvokeAsync(() => OnLoadComplete(e)).Wait();
 
         }
 
@@ -577,7 +577,7 @@ namespace Avalonia.Controls.Html
             if (CheckAccess())
                 OnLinkClicked(e);
             else
-                Dispatcher.UIThread.Invoke(new Action<HtmlLinkClickedEventArgs>(OnLinkClicked), e);
+                Dispatcher.UIThread.InvokeAsync(() => OnLinkClicked(e)).Wait();
         }
 
         private void OnRenderError(object sender, HtmlRenderErrorEventArgs e)
@@ -585,7 +585,7 @@ namespace Avalonia.Controls.Html
             if (CheckAccess())
                 OnRenderError(e);
             else
-                Dispatcher.UIThread.Invoke(new Action<HtmlRenderErrorEventArgs>(OnRenderError), e);
+                Dispatcher.UIThread.InvokeAsync(() => OnRenderError(e)).Wait();
         }
 
         private void OnStylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
@@ -593,7 +593,7 @@ namespace Avalonia.Controls.Html
             if (CheckAccess())
                 OnStylesheetLoad(e);
             else
-                Dispatcher.UIThread.Invoke(new Action<HtmlStylesheetLoadEventArgs>(OnStylesheetLoad), e);
+                Dispatcher.UIThread.InvokeAsync(() => OnStylesheetLoad(e)).Wait();
         }
 
         private void OnImageLoad(object sender, HtmlImageLoadEventArgs e)
@@ -601,7 +601,7 @@ namespace Avalonia.Controls.Html
             if (CheckAccess())
                 OnImageLoad(e);
             else
-                Dispatcher.UIThread.Invoke(new Action<HtmlImageLoadEventArgs>(OnImageLoad), e);
+                Dispatcher.UIThread.InvokeAsync(() => OnImageLoad(e)).Wait();
         }
 
         private void OnRefresh(object sender, HtmlRefreshEventArgs e)
@@ -609,8 +609,7 @@ namespace Avalonia.Controls.Html
             if (CheckAccess())
                 OnRefresh(e);
             else
-                Dispatcher.UIThread.Invoke(new Action<HtmlRefreshEventArgs>(OnRefresh), e);
+                Dispatcher.UIThread.InvokeAsync(() => OnRefresh(e)).Wait();
         }
-        */
     }
 }

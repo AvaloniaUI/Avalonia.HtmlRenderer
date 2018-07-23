@@ -7,8 +7,8 @@
     <NoWarn>CS0436</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="external\Source\HtmlRenderer\Core\Utils\ImageError.png" />
-    <Content Include="external\Source\HtmlRenderer\Core\Utils\ImageLoad.png" />
+    <EmbeddedResource Include="external\Source\HtmlRenderer\Core\Utils\ImageError.png" />
+    <EmbeddedResource Include="external\Source\HtmlRenderer\Core\Utils\ImageLoad.png" />
   </ItemGroup>
     <ItemGroup>
     <Compile Include="Adapters\BrushAdapter.cs" />
@@ -24,7 +24,6 @@
     <Compile Include="Compat\Api.cs" />
     <Compile Include="Compat\Attributes.cs" />
     <Compile Include="Compat\ThreadPool.cs" />
-    <Compile Include="external\Source\HtmlRenderer.Pcl\PclCompat.cs" />
     <Compile Include="external\Source\HtmlRenderer\Adapters\Entities\RColor.cs" />
     <Compile Include="external\Source\HtmlRenderer\Adapters\Entities\RDashStyle.cs" />
     <Compile Include="external\Source\HtmlRenderer\Adapters\Entities\RFontStyle.cs" />
