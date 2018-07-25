@@ -7,8 +7,12 @@
     <NoWarn>CS0436</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="external\Source\HtmlRenderer\Core\Utils\ImageError.png" />
-    <EmbeddedResource Include="external\Source\HtmlRenderer\Core\Utils\ImageLoad.png" />
+    <EmbeddedResource Include="external\Source\HtmlRenderer\Core\Utils\ImageError.png">
+      <LogicalName>TheArtOfDev.HtmlRenderer.Core.Utils.ImageError.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="external\Source\HtmlRenderer\Core\Utils\ImageLoad.png">
+      <LogicalName>TheArtOfDev.HtmlRenderer.Core.Utils.ImageLoad.png</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
     <ItemGroup>
     <Compile Include="Adapters\BrushAdapter.cs" />

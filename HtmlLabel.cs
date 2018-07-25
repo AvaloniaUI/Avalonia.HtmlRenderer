@@ -69,6 +69,7 @@ namespace Avalonia.Controls.Html
                     _htmlContainer.HtmlContainerInt.PerformLayout(ig);
                     var newSize = _htmlContainer.ActualSize;
                     constraint = new Size(newSize.Width + horizontal, newSize.Height + vertical);
+                    _htmlContainer.HtmlContainerInt.PageSize = _htmlContainer.HtmlContainerInt.ActualSize;
                 }
             }
 
