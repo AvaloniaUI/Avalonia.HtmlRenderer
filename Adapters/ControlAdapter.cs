@@ -10,31 +10,33 @@
 // - Sun Tsu,
 // "The Art of War"
 
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Html;
 using Avalonia.Input;
 using Avalonia.VisualTree;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Utils;
 using TheArtOfDev.HtmlRenderer.Avalonia.Utilities;
+using TheArtOfDev.HtmlRenderer.Core.Utils;
+
 // ReSharper disable ConvertPropertyToExpressionBody
 
 namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 {
     /// <summary>
-    /// Adapter for Avalonia Control for core.
+    ///     Adapter for Avalonia Control for core.
     /// </summary>
     internal sealed class ControlAdapter : RControl
     {
         /// <summary>
-        /// the underline Avalonia control.
+        ///     the underline Avalonia control.
         /// </summary>
         private readonly Control _control;
 
+        private bool _leftMouseButton;
+
         /// <summary>
-        /// Init.
+        ///     Init.
         /// </summary>
         public ControlAdapter(Control control)
             : base(AvaloniaAdapter.Instance)
@@ -45,7 +47,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         }
 
         /// <summary>
-        /// Get the underline Avalonia control
+        ///     Get the underline Avalonia control
         /// </summary>
         public Control Control
         {
@@ -56,12 +58,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         {
             get
             {
-                var pos = (_control.GetVisualRoot() as IInputRoot)?.MouseDevice?.Position ?? default(Point);
-                return Util.Convert(pos);
+                var pos = (_control.GetVisualRoot() as IInputRoot)?.MouseDevice?.Position;
+                //TODO: DPI
+                return Util.Convert(pos.Value.ToPointWithDpi(96));
             }
         }
 
-        private bool _leftMouseButton;
         public override bool LeftMouseButton => (_control as HtmlControl)?.LeftMouseButton ?? false;
 
         public override bool RightMouseButton
@@ -95,7 +97,8 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             //DragDrop.DoDragDrop(_control, dragDropData, DragDropEffects.Copy);
         }
 
-        public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
+        public override void MeasureString(string str, RFont font, double maxWidth, out int charFit,
+            out double charFitWidth)
         {
             using (var g = new GraphicsAdapter())
             {

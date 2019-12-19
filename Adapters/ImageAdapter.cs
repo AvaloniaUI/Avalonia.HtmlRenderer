@@ -38,9 +38,9 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// </summary>
         public Bitmap Image => _image;
 
-        public override double Width => _image.PixelWidth;
+        public override double Width => _image.PixelSize.Width;
 
-        public override double Height => _image.PixelHeight;
+        public override double Height => _image.PixelSize.Height;
 
         public override void Dispose()
         {

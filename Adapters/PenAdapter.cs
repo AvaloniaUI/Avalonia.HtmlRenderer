@@ -18,21 +18,25 @@ using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 {
     /// <summary>
-    /// Adapter for Avalonia pens objects for core.
+    ///     Adapter for Avalonia pens objects for core.
     /// </summary>
     internal sealed class PenAdapter : RPen
     {
+        private static readonly Dictionary<RDashStyle, IDashStyle> DashStyles = new Dictionary<RDashStyle, IDashStyle>
+        {
+            {RDashStyle.Solid, null},
+            {RDashStyle.Dash, global::Avalonia.Media.DashStyle.Dash},
+            {RDashStyle.DashDot, global::Avalonia.Media.DashStyle.DashDot},
+            {RDashStyle.DashDotDot, global::Avalonia.Media.DashStyle.DashDotDot},
+            {RDashStyle.Dot, global::Avalonia.Media.DashStyle.Dot}
+        };
+
         /// <summary>
-        /// The actual Avalonia brush instance.
+        ///     The actual Avalonia brush instance.
         /// </summary>
         private readonly IBrush _brush;
 
-        /// <summary>
-        /// the width of the pen
-        /// </summary>
-        private double _width;
-
-        private DashStyle _dashStyle;
+        private IDashStyle _dashStyle;
 
         /// <summary>
         /// the dash style of the pen
@@ -40,40 +44,29 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         //private DashStyle _dashStyle = DashStyles.Solid;
 
         /// <summary>
-        /// Init.
+        ///     Init.
         /// </summary>
         public PenAdapter(IBrush brush)
         {
             _brush = brush;
         }
 
-        public override double Width
-        {
-            get { return _width; }
-            set { _width = value; }
-        }
+        /// <summary>
+        ///     the width of the pen
+        /// </summary>
+        public override double Width { get; set; }
 
         public override RDashStyle DashStyle
         {
             set { DashStyles.TryGetValue(value, out _dashStyle); }
         }
 
-        private static readonly Dictionary<RDashStyle, DashStyle> DashStyles = new Dictionary<RDashStyle, DashStyle>
-        {
-            {RDashStyle.Solid,null },
-            {RDashStyle.Dash, global::Avalonia.Media.DashStyle.Dash },
-            {RDashStyle.DashDot, global::Avalonia.Media.DashStyle.DashDot },
-            {RDashStyle.DashDotDot, global::Avalonia.Media.DashStyle.DashDotDot },
-            {RDashStyle.Dot, global::Avalonia.Media.DashStyle.Dot }
-        };
-
         /// <summary>
-        /// Create the actual Avalonia pen instance.
+        ///     Create the actual Avalonia pen instance.
         /// </summary>
         public Pen CreatePen()
         {
-            var pen = new Pen(_brush, _width, _dashStyle);
-            return pen;
+            return new Pen(_brush, Width, _dashStyle);
         }
     }
 }

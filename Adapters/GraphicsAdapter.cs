@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
@@ -109,8 +110,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         public override RSize MeasureString(string str, RFont font)
         {
             var text = GetText(str, font);
-            var measure = text.Measure();
-            return new RSize(measure.Width, measure.Height);
+            return new RSize(text.Bounds.Width, text.Bounds.Height);
             
         }
 
@@ -127,7 +127,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
         {
             var text = GetText(str, font);
-            var fullLength = text.Measure().Width;
+            var fullLength = text.Bounds.Width;
             if (fullLength < maxWidth)
             {
                 charFitWidth = fullLength;
@@ -140,7 +140,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             BinarySearch(len =>
             {
                 text = GetText(str.Substring(0, len), font);
-                var size = text.Measure().Width;
+                var size = text.Bounds.Width;
                 lastMeasure = size;
                 lastLen = len;
                 if (size <= maxWidth)
@@ -151,7 +151,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             if (lastMeasure > maxWidth)
             {
                 lastLen--;
-                lastMeasure = GetText(str.Substring(0, lastLen), font).Measure().Width;
+                lastMeasure = GetText(str.Substring(0, lastLen), font).Bounds.Width;
             }
             charFit = lastLen;
             charFitWidth = lastMeasure;
