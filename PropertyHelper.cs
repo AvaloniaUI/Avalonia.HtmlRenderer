@@ -9,7 +9,7 @@ namespace Avalonia.HtmlRenderer
     static class PropertyHelper
     {
 
-        public static AvaloniaProperty Register<TOwner, T>(string name, T def, Action<AvaloniaObject, AvaloniaPropertyChangedEventArgs> changed) where TOwner : AvaloniaObject
+        public static AvaloniaProperty Register<TOwner, T>(string name, T def, Action<IAvaloniaObject, AvaloniaPropertyChangedEventArgs> changed) where TOwner : AvaloniaObject
         {
             var pp = AvaloniaProperty.Register<TOwner, T>(name, def);
             Action<AvaloniaPropertyChangedEventArgs> cb = args =>

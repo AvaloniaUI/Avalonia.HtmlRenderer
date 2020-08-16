@@ -56,8 +56,9 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         {
             get
             {
-                var pos = (_control.GetVisualRoot() as IInputRoot)?.MouseDevice?.Position ?? default(Point);
-                return Util.Convert(pos);
+                var pos = (_control.GetVisualRoot() as IInputRoot)?.MouseDevice?.Position;
+                //TODO: DPI
+                return Util.Convert(pos.Value.ToPointWithDpi(96));
             }
         }
 

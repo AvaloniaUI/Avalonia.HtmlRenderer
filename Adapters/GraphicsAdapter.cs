@@ -109,8 +109,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         public override RSize MeasureString(string str, RFont font)
         {
             var text = GetText(str, font);
-            var measure = text.Measure();
-            return new RSize(measure.Width, measure.Height);
+            return new RSize(text.Bounds.Width, text.Bounds.Height);
             
         }
 
@@ -120,14 +119,15 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             return new FormattedText
             {
                 Text = str,
-                Typeface = new Typeface(f.Name, font.Size, f.FontStyle, f.Weight),
+                Typeface = new Typeface(f.Name, f.FontStyle, f.Weight),
+                FontSize = font.Size
             };
         }
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
         {
             var text = GetText(str, font);
-            var fullLength = text.Measure().Width;
+            var fullLength = text.Bounds.Width;
             if (fullLength < maxWidth)
             {
                 charFitWidth = fullLength;
@@ -140,7 +140,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             BinarySearch(len =>
             {
                 text = GetText(str.Substring(0, len), font);
-                var size = text.Measure().Width;
+                var size = text.Bounds.Width;
                 lastMeasure = size;
                 lastLen = len;
                 if (size <= maxWidth)
@@ -151,7 +151,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             if (lastMeasure > maxWidth)
             {
                 lastLen--;
-                lastMeasure = GetText(str.Substring(0, lastLen), font).Measure().Width;
+                lastMeasure = GetText(str.Substring(0, lastLen), font).Bounds.Width;
             }
             charFit = lastLen;
             charFitWidth = lastMeasure;
@@ -253,12 +253,14 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override void DrawImage(RImage image, RRect destRect, RRect srcRect)
         {
-            _g.DrawImage(((ImageAdapter) image).Image, 1, Util.Convert(srcRect), Util.Convert(destRect));
+            _g.PushOpacity(1);
+            _g.DrawImage(((ImageAdapter)image).Image, Util.Convert(srcRect), Util.Convert(destRect));
         }
 
         public override void DrawImage(RImage image, RRect destRect)
         {
-            _g.DrawImage(((ImageAdapter) image).Image, 1, new Rect(0, 0, image.Width, image.Height),
+            _g.PushOpacity(1);
+            _g.DrawImage(((ImageAdapter)image).Image, new Rect(0, 0, image.Width, image.Height),
                 Util.Convert(destRect));
         }
 

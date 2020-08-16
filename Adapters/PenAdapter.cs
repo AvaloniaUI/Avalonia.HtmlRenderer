@@ -27,12 +27,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// </summary>
         private readonly IBrush _brush;
 
-        /// <summary>
-        /// the width of the pen
-        /// </summary>
-        private double _width;
-
-        private DashStyle _dashStyle;
+        private IDashStyle _dashStyle;
 
         /// <summary>
         /// the dash style of the pen
@@ -47,18 +42,17 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             _brush = brush;
         }
 
-        public override double Width
-        {
-            get { return _width; }
-            set { _width = value; }
-        }
+        /// <summary>
+        ///   the width of the pen
+        /// </summary>
+        public override double Width { get; set; }
 
         public override RDashStyle DashStyle
         {
             set { DashStyles.TryGetValue(value, out _dashStyle); }
         }
 
-        private static readonly Dictionary<RDashStyle, DashStyle> DashStyles = new Dictionary<RDashStyle, DashStyle>
+        private static readonly Dictionary<RDashStyle, IDashStyle> DashStyles = new Dictionary<RDashStyle, IDashStyle>
         {
             {RDashStyle.Solid,null },
             {RDashStyle.Dash, global::Avalonia.Media.DashStyle.Dash },
@@ -72,8 +66,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// </summary>
         public Pen CreatePen()
         {
-            var pen = new Pen(_brush, _width, _dashStyle);
-            return pen;
+            return new Pen(_brush, Width, _dashStyle);
         }
     }
 }
