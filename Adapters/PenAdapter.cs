@@ -61,10 +61,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         private static readonly Dictionary<RDashStyle, DashStyle> DashStyles = new Dictionary<RDashStyle, DashStyle>
         {
             {RDashStyle.Solid,null },
-            {RDashStyle.Dash, global::Avalonia.Media.DashStyle.Dash },
-            {RDashStyle.DashDot, global::Avalonia.Media.DashStyle.DashDot },
-            {RDashStyle.DashDotDot, global::Avalonia.Media.DashStyle.DashDotDot },
-            {RDashStyle.Dot, global::Avalonia.Media.DashStyle.Dot }
+            {RDashStyle.Dash, null/*global::Avalonia.Media.DashStyle.Dash*/ },
+            {RDashStyle.DashDot, null/*global::Avalonia.Media.DashStyle.DashDot*/ },
+            {RDashStyle.DashDotDot, null/*global::Avalonia.Media.DashStyle.DashDotDot*/ },
+            {RDashStyle.Dot, null/*global::Avalonia.Media.DashStyle.Dot*/ }
         };
 
         /// <summary>

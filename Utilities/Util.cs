@@ -30,6 +30,14 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
+        /// Convert from Avalonia PixelPoint to core point.
+        /// </summary>
+        public static RPoint Convert(PixelPoint p)
+        {
+            return new RPoint(p.X, p.Y);
+        }
+
+        /// <summary>
         /// Convert from WPF point to core point.
         /// </summary>
         public static Point[] Convert(RPoint[] points)

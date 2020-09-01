@@ -82,7 +82,7 @@ namespace Avalonia.Controls.Html
         /// <summary>
         /// Handle when dependency property value changes to update the underline HtmlContainer with the new value.
         /// </summary>
-        private static void OnAvaloniaProperty_valueChanged(AvaloniaObject AvaloniaObject, AvaloniaPropertyChangedEventArgs e)
+        private static Action<IAvaloniaObject, AvaloniaPropertyChangedEventArgs> OnAvaloniaProperty_valueChanged = new Action<IAvaloniaObject, AvaloniaPropertyChangedEventArgs>((AvaloniaObject, e) =>
         {
             var control = AvaloniaObject as HtmlLabel;
             if (control != null)
@@ -106,7 +106,7 @@ namespace Avalonia.Controls.Html
                     }
                 }
             }
-        }
+        });
 
         #endregion
     }
