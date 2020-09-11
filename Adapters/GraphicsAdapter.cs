@@ -120,7 +120,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             return new FormattedText
             {
                 Text = str,
-                Typeface = FontManager.Current.GetOrAddTypeface(f.Name, f.FontStyle, f.Weight),
+                Typeface = new Typeface(f.Name, f.FontStyle, f.Weight),
                 FontSize = font.Size
             };
         }
