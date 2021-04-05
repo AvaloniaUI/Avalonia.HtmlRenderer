@@ -11,8 +11,6 @@
 // "The Art of War"
 
 using System;
-using Avalonia.Controls.Primitives;
-using Avalonia.HtmlRenderer;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -116,7 +114,7 @@ namespace Avalonia.Controls.Html
         static HtmlControl()
         {
             FocusableProperty.OverrideDefaultValue(typeof(HtmlControl), true);
-            AffectsRender(TextProperty);
+            AffectsRender<HtmlControl>(TextProperty);
 
             AvoidImagesLateLoadingProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
             IsSelectionEnabledProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);

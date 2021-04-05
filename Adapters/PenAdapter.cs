@@ -32,12 +32,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// </summary>
         private double _width;
 
-        private DashStyle _dashStyle;
-
         /// <summary>
         /// the dash style of the pen
         /// </summary>
-        //private DashStyle _dashStyle = DashStyles.Solid;
+        private IDashStyle _dashStyle;
 
         /// <summary>
         /// Init.
@@ -58,13 +56,13 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             set { DashStyles.TryGetValue(value, out _dashStyle); }
         }
 
-        private static readonly Dictionary<RDashStyle, DashStyle> DashStyles = new Dictionary<RDashStyle, DashStyle>
+        private static readonly Dictionary<RDashStyle, IDashStyle> DashStyles = new Dictionary<RDashStyle, IDashStyle>
         {
-            {RDashStyle.Solid,null },
-            {RDashStyle.Dash, null/*global::Avalonia.Media.DashStyle.Dash*/ },
-            {RDashStyle.DashDot, null/*global::Avalonia.Media.DashStyle.DashDot*/ },
-            {RDashStyle.DashDotDot, null/*global::Avalonia.Media.DashStyle.DashDotDot*/ },
-            {RDashStyle.Dot, null/*global::Avalonia.Media.DashStyle.Dot*/ }
+            {RDashStyle.Solid, null },
+            {RDashStyle.Dash, global::Avalonia.Media.DashStyle.Dash },
+            {RDashStyle.DashDot, global::Avalonia.Media.DashStyle.DashDot },
+            {RDashStyle.DashDotDot, global::Avalonia.Media.DashStyle.DashDotDot },
+            {RDashStyle.Dot, global::Avalonia.Media.DashStyle.Dot }
         };
 
         /// <summary>

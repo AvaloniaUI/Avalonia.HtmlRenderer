@@ -254,12 +254,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override void DrawImage(RImage image, RRect destRect, RRect srcRect)
         {
-            _g.DrawImage(((ImageAdapter) image).Image, /*1, */Util.Convert(srcRect), Util.Convert(destRect));
+            _g.DrawImage(((ImageAdapter) image).Image, Util.Convert(srcRect), Util.Convert(destRect));
         }
 
         public override void DrawImage(RImage image, RRect destRect)
         {
-            _g.DrawImage(((ImageAdapter) image).Image, /*1, */new Rect(0, 0, image.Width, image.Height),
+            _g.DrawImage(((ImageAdapter) image).Image, new Rect(0, 0, image.Width, image.Height),
                 Util.Convert(destRect));
         }
 

@@ -16,6 +16,7 @@ using Avalonia.Media;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core;
 using TheArtOfDev.HtmlRenderer.Avalonia.Adapters;
+using TheArtOfDev.HtmlRenderer.Core;
 
 namespace Avalonia.Controls.Html
 {
@@ -36,6 +37,10 @@ namespace Avalonia.Controls.Html
 
         public static readonly AvaloniaProperty AutoSizeProperty = PropertyHelper.Register<HtmlLabel, bool>("AutoSize", true, OnAvaloniaProperty_valueChanged);
         public static readonly AvaloniaProperty AutoSizeHeightOnlyProperty = PropertyHelper.Register<HtmlLabel, bool>("AutoSizeHeightOnly", false, OnAvaloniaProperty_valueChanged);
+        public static readonly StyledProperty<bool> AutoSizeProperty =
+            AvaloniaProperty.Register<HtmlLabel, bool>("AutoSize", true);
+        public static readonly StyledProperty<bool> AutoSizeHeightOnlyProperty =
+            AvaloniaProperty.Register<HtmlLabel, bool>("AutoSizeHeightOnly", false);
 
         #endregion
 
@@ -46,6 +51,25 @@ namespace Avalonia.Controls.Html
         static HtmlLabel()
         {
             BackgroundProperty.OverrideDefaultValue<HtmlLabel>(Brushes.Transparent);
+            AffectsMeasure<HtmlLabel>(AutoSizeProperty, AutoSizeHeightOnlyProperty);
+        }
+
+        /// <summary>
+        /// Automatically sets the size of the label by content size
+        /// </summary>
+        public bool AutoSize
+        {
+            get => GetValue(AutoSizeProperty);
+            set => SetValue(AutoSizeProperty, value);
+        }
+
+        /// <summary>
+        /// Automatically sets the height of the label by content height (width is not effected).
+        /// </summary>
+        public virtual bool AutoSizeHeightOnly
+        {
+            get => GetValue(AutoSizeHeightOnlyProperty);
+            set => SetValue(AutoSizeHeightOnlyProperty, value);
         }
 
         #region Private methods
@@ -79,15 +103,21 @@ namespace Avalonia.Controls.Html
             return constraint;
         }
 
+
         /// <summary>
         /// Handle when dependency property value changes to update the underline HtmlContainer with the new value.
         /// </summary>
         private static Action<IAvaloniaObject, AvaloniaPropertyChangedEventArgs> OnAvaloniaProperty_valueChanged = new Action<IAvaloniaObject, AvaloniaPropertyChangedEventArgs>((AvaloniaObject, e) =>
+        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> e)
         {
             var control = AvaloniaObject as HtmlLabel;
             if (control != null)
+            base.OnPropertyChanged(e);
+
+            if (e.Property == AutoSizeProperty)
             {
                 if (e.Property == AutoSizeProperty)
+                if (e.NewValue.GetValueOrDefault<bool>())
                 {
                     if ((bool)e.NewValue)
                     {
@@ -95,8 +125,13 @@ namespace Avalonia.Controls.Html
                         control.InvalidateMeasure();
                         control.InvalidateVisual();
                     }
+                    SetValue(AutoSizeHeightOnlyProperty, false);
                 }
                 else if (e.Property == AutoSizeHeightOnlyProperty)
+            }
+            else if (e.Property == AutoSizeHeightOnlyProperty)
+            {
+                if (e.NewValue.GetValueOrDefault<bool>())
                 {
                     if ((bool)e.NewValue)
                     {
@@ -104,10 +139,12 @@ namespace Avalonia.Controls.Html
                         control.InvalidateMeasure();
                         control.InvalidateVisual();
                     }
+                    SetValue(AutoSizeProperty, false);
                 }
             }
         });
 
+        }
         #endregion
     }
 }
