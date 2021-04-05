@@ -56,7 +56,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         {
             get
             {
-                var pos = (_control.GetVisualRoot() as IInputRoot)?.MouseDevice?.Position ?? default(Point);
+                var pos = (_control.GetVisualRoot() as IInputRoot)?.MouseDevice?.Position ?? default(PixelPoint);
                 return Util.Convert(pos);
             }
         }

@@ -74,17 +74,17 @@ namespace Avalonia.Controls.Html
         protected Point _lastScrollOffset;
 
         public static readonly AvaloniaProperty AvoidImagesLateLoadingProperty = 
-            PropertyHelper.Register<HtmlControl, bool>(nameof(AvoidImagesLateLoading), false, OnAvaloniaProperty_valueChanged);
+            AvaloniaProperty.Register<HtmlControl, bool>(nameof(AvoidImagesLateLoading), defaultValue: false);
         public static readonly AvaloniaProperty IsSelectionEnabledProperty =
-            PropertyHelper.Register<HtmlControl, bool>(nameof(IsSelectionEnabled), true, OnAvaloniaProperty_valueChanged);
+            AvaloniaProperty.Register<HtmlControl, bool>(nameof(IsSelectionEnabled), defaultValue: true);
         public static readonly AvaloniaProperty IsContextMenuEnabledProperty =
-            PropertyHelper.Register<HtmlControl, bool>(nameof(IsContextMenuEnabled), true, OnAvaloniaProperty_valueChanged);
+            AvaloniaProperty.Register<HtmlControl, bool>(nameof(IsContextMenuEnabled), defaultValue: true);
 
         public static readonly AvaloniaProperty BaseStylesheetProperty =
-            PropertyHelper.Register<HtmlControl, string>(nameof(BaseStylesheet), null, OnAvaloniaProperty_valueChanged);
+            AvaloniaProperty.Register<HtmlControl, string>(nameof(BaseStylesheet), defaultValue: null);
 
         public static readonly AvaloniaProperty TextProperty =
-            PropertyHelper.Register<HtmlControl, string>(nameof(Text), null, OnAvaloniaProperty_valueChanged);
+            AvaloniaProperty.Register<HtmlControl, string>(nameof(Text), defaultValue: null);
 
         public static readonly StyledProperty<IBrush> BackgroundProperty =
             Border.BackgroundProperty.AddOwner<HtmlControl>();
@@ -117,12 +117,18 @@ namespace Avalonia.Controls.Html
         {
             FocusableProperty.OverrideDefaultValue(typeof(HtmlControl), true);
             AffectsRender(TextProperty);
+
+            AvoidImagesLateLoadingProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
+            IsSelectionEnabledProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
+            IsContextMenuEnabledProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
+            BaseStylesheetProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
+            TextProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
         }
 
         /// <summary>
         /// Creates a new HtmlPanel and sets a basic css for it's styling.
         /// </summary>
-        protected HtmlControl()
+        public HtmlControl()
         {
             _htmlContainer = new HtmlContainer();
             _htmlContainer.LoadComplete += OnLoadComplete;
@@ -521,8 +527,7 @@ namespace Avalonia.Controls.Html
         /// <summary>
         /// Handle when dependency property value changes to update the underline HtmlContainer with the new value.
         /// </summary>
-        private static void OnAvaloniaProperty_valueChanged(AvaloniaObject AvaloniaObject,
-            AvaloniaPropertyChangedEventArgs e)
+        private static void OnAvaloniaProperty_valueChanged(IAvaloniaObject AvaloniaObject, AvaloniaPropertyChangedEventArgs e)
         {
             var control = AvaloniaObject as HtmlControl;
             if (control != null)
