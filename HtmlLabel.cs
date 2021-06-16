@@ -11,10 +11,8 @@
 // "The Art of War"
 
 using System;
-using Avalonia.HtmlRenderer;
 using Avalonia.Media;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
-using TheArtOfDev.HtmlRenderer.Core;
 using TheArtOfDev.HtmlRenderer.Avalonia.Adapters;
 using TheArtOfDev.HtmlRenderer.Core;
 
@@ -35,8 +33,6 @@ namespace Avalonia.Controls.Html
     {
         #region Dependency properties
 
-        public static readonly AvaloniaProperty AutoSizeProperty = PropertyHelper.Register<HtmlLabel, bool>("AutoSize", true, OnAvaloniaProperty_valueChanged);
-        public static readonly AvaloniaProperty AutoSizeHeightOnlyProperty = PropertyHelper.Register<HtmlLabel, bool>("AutoSizeHeightOnly", false, OnAvaloniaProperty_valueChanged);
         public static readonly StyledProperty<bool> AutoSizeProperty =
             AvaloniaProperty.Register<HtmlLabel, bool>("AutoSize", true);
         public static readonly StyledProperty<bool> AutoSizeHeightOnlyProperty =
@@ -107,43 +103,24 @@ namespace Avalonia.Controls.Html
         /// <summary>
         /// Handle when dependency property value changes to update the underline HtmlContainer with the new value.
         /// </summary>
-        private static Action<IAvaloniaObject, AvaloniaPropertyChangedEventArgs> OnAvaloniaProperty_valueChanged = new Action<IAvaloniaObject, AvaloniaPropertyChangedEventArgs>((AvaloniaObject, e) =>
         protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> e)
         {
-            var control = AvaloniaObject as HtmlLabel;
-            if (control != null)
             base.OnPropertyChanged(e);
 
             if (e.Property == AutoSizeProperty)
             {
-                if (e.Property == AutoSizeProperty)
                 if (e.NewValue.GetValueOrDefault<bool>())
                 {
-                    if ((bool)e.NewValue)
-                    {
-                        AvaloniaObject.SetValue(AutoSizeHeightOnlyProperty, false);
-                        control.InvalidateMeasure();
-                        control.InvalidateVisual();
-                    }
                     SetValue(AutoSizeHeightOnlyProperty, false);
                 }
-                else if (e.Property == AutoSizeHeightOnlyProperty)
             }
             else if (e.Property == AutoSizeHeightOnlyProperty)
             {
                 if (e.NewValue.GetValueOrDefault<bool>())
                 {
-                    if ((bool)e.NewValue)
-                    {
-                        AvaloniaObject.SetValue(AutoSizeProperty, false);
-                        control.InvalidateMeasure();
-                        control.InvalidateVisual();
-                    }
                     SetValue(AutoSizeProperty, false);
                 }
             }
-        });
-
         }
         #endregion
     }
