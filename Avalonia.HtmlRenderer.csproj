@@ -5,6 +5,10 @@
     <EnableDefaultItems>False</EnableDefaultItems>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <NoWarn>CS0436</NoWarn>
+    <RestoreSources>
+      https://nuget.avaloniaui.net/repository/avalonia-nightly/index.json;
+    </RestoreSources>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="external\Source\HtmlRenderer\Core\Utils\ImageError.png">
@@ -110,6 +114,6 @@
     <Compile Include="Utilities\Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.0" />
+    <PackageReference Include="Avalonia" Version="0.10.999-cibuild0018389-beta" />
   </ItemGroup>
 </Project>

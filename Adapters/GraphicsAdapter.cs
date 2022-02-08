@@ -109,26 +109,20 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         public override RSize MeasureString(string str, RFont font)
         {
             var text = GetText(str, font);
-            var measure = text.Bounds;
-            return new RSize(measure.Width, measure.Height);
+            return new RSize(text.WidthIncludingTrailingWhitespace, text.Height);
             
         }
 
         FormattedText GetText(string str, RFont font)
         {
             var f = ((FontAdapter)font);
-            return new FormattedText
-            {
-                Text = str,
-                Typeface = new Typeface(f.Name, f.FontStyle, f.Weight),
-                FontSize = font.Size
-            };
+            return new FormattedText(str, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface(f.Name, f.FontStyle, f.Weight), font.Size, null);
         }
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
         {
             var text = GetText(str, font);
-            var fullLength = text.Bounds.Width;
+            var fullLength = text.WidthIncludingTrailingWhitespace;
             if (fullLength < maxWidth)
             {
                 charFitWidth = fullLength;
@@ -141,7 +135,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             BinarySearch(len =>
             {
                 text = GetText(str.Substring(0, len), font);
-                var size = text.Bounds.Width;
+                var size = text.WidthIncludingTrailingWhitespace;
                 lastMeasure = size;
                 lastLen = len;
                 if (size <= maxWidth)
@@ -152,7 +146,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             if (lastMeasure > maxWidth)
             {
                 lastLen--;
-                lastMeasure = GetText(str.Substring(0, lastLen), font).Bounds.Width;
+                lastMeasure = GetText(str.Substring(0, lastLen), font).WidthIncludingTrailingWhitespace;
             }
             charFit = lastLen;
             charFitWidth = lastMeasure;
@@ -184,8 +178,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         public override void DrawString(string str, RFont font, RColor color, RPoint point, RSize size, bool rtl)
         {
             var text = GetText(str, font);
-            text.Constraint = Util.Convert(size);
-            _g.DrawText(new SolidColorBrush(Util.Convert(color)), Util.Convert(point), text);
+            text.SetForegroundBrush(new SolidColorBrush(Util.Convert(color)));
+            text.MaxTextWidth = size.Width;
+            text.MaxTextHeight = size.Height;
+            _g.DrawText( text, Util.Convert(point));
         }
 
         public override RBrush GetTextureBrush(RImage image, RRect dstRect, RPoint translateTransformLocation)
