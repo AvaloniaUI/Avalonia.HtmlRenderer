@@ -110,6 +110,6 @@
     <Compile Include="Utilities\Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.0" />
+    <PackageReference Include="Avalonia" Version="0.10.13" />
   </ItemGroup>
 </Project>
