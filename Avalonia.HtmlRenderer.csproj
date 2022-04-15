@@ -6,6 +6,18 @@
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <NoWarn>CS0436</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <Version>0.10.0</Version>
+    <Copyright>Copyright 2022 &#169; The AvaloniaUI Project</Copyright>
+    <PackageProjectUrl>https://avaloniaui.net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AvaloniaUI/Avalonia.HtmlRenderer/</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="external\Source\HtmlRenderer\Core\Utils\ImageError.png">
       <LogicalName>TheArtOfDev.HtmlRenderer.Core.Utils.ImageError.png</LogicalName>
@@ -111,5 +123,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
   </ItemGroup>
 </Project>
