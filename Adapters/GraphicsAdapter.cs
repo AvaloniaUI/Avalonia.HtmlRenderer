@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Utils;
@@ -114,15 +115,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             
         }
 
-        FormattedText GetText(string str, RFont font)
+        TextLayout GetText(string str, RFont font, SolidColorBrush foreground = null, double maxWidth = double.PositiveInfinity, double maxHeight = double.PositiveInfinity)
         {
             var f = ((FontAdapter)font);
-            return new FormattedText
-            {
-                Text = str,
-                Typeface = new Typeface(f.Name, f.FontStyle, f.Weight),
-                FontSize = font.Size
-            };
+            return new TextLayout(str, new Typeface(f.Name, f.FontStyle, f.Weight), font.Size, foreground, maxHeight: maxHeight, maxWidth: maxWidth);
         }
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
@@ -183,9 +179,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override void DrawString(string str, RFont font, RColor color, RPoint point, RSize size, bool rtl)
         {
-            var text = GetText(str, font);
-            text.Constraint = Util.Convert(size);
-            _g.DrawText(new SolidColorBrush(Util.Convert(color)), Util.Convert(point), text);
+            var sizeConverted = Util.Convert(size);
+            var text = GetText(str, font, new SolidColorBrush(Util.Convert(color)), sizeConverted.Width, sizeConverted.Height);
+
+            text.Draw(_g, Util.Convert(point));
         }
 
         public override RBrush GetTextureBrush(RImage image, RRect dstRect, RPoint translateTransformLocation)

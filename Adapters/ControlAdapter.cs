@@ -32,6 +32,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// the underline Avalonia control.
         /// </summary>
         private readonly Control _control;
+        /// <summary>
+        /// Last known pointer position
+        /// </summary>
+        private Point? _lastPosition;
+        private bool _leftMouseButton;
+        private bool _rightMouseButton;
 
         /// <summary>
         /// Init.
@@ -42,6 +48,38 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             ArgChecker.AssertArgNotNull(control, "control");
 
             _control = control;
+
+            _control.PointerMoved += (sender, args) =>
+            {
+                var visualRoot = _control.GetVisualRoot();
+                if (visualRoot != null)
+                {
+                    _lastPosition = args.GetPosition(visualRoot);
+                }
+            };
+            
+            _control.PointerPressed += (sender, args) =>
+            {
+                _leftMouseButton = true;
+            };
+            
+            _control.PointerReleased += (sender, args) =>
+            {
+                switch (args.InitialPressMouseButton)
+                {
+                    case MouseButton.Left:
+                        _leftMouseButton = false;
+                        break;
+                    case MouseButton.Right:
+                        _rightMouseButton = false;
+                        break;
+                }
+            };
+            
+            _control.ContextRequested += (sender, args) =>
+            {
+                _rightMouseButton = true;
+            };
         }
 
         /// <summary>
@@ -56,23 +94,13 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         {
             get
             {
-                var pos = (_control.GetVisualRoot() as IInputRoot)?.MouseDevice?.Position ?? default(PixelPoint);
-                return Util.Convert(pos);
+                return Util.Convert(_lastPosition.GetValueOrDefault());
             }
         }
 
-        private bool _leftMouseButton;
-        public override bool LeftMouseButton => (_control as HtmlControl)?.LeftMouseButton ?? false;
+        public override bool LeftMouseButton => _leftMouseButton;
 
-        public override bool RightMouseButton
-        {
-            get
-            {
-                return false;
-                //TODO: Implement right mouse click
-                //return Mouse.RightButton == MouseButtonState.Pressed;
-            }
-        }
+        public override bool RightMouseButton => _rightMouseButton;
 
         public override void SetCursorDefault()
         {

@@ -110,6 +110,7 @@ namespace Avalonia.Controls.Html
         public static readonly RoutedEvent ImageLoadEvent
             = RoutedEvent.Register<HtmlRendererRoutedEventArgs<HtmlImageLoadEventArgs>>("ImageLoad", RoutingStrategies.Bubble,
                 typeof (HtmlControl));
+        private Point? _lastPosition;
 
         static HtmlControl()
         {
@@ -391,15 +392,19 @@ namespace Avalonia.Controls.Html
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             base.OnPointerMoved(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseMove(this, e.GetPosition(this));
+            _lastPosition = e.GetPosition(this);
+            if (_htmlContainer != null && _lastPosition.HasValue)
+            {
+                _htmlContainer.HandleMouseMove(this, _lastPosition.Value);
+            }
         }
+
         /// <summary>
         /// Handle mouse leave to handle cursor change.
         /// </summary>
-        protected override void OnPointerLeave(PointerEventArgs e)
+        protected override void OnPointerExited(PointerEventArgs e)
         {
-            base.OnPointerLeave(e);
+            base.OnPointerExited(e);
             if (_htmlContainer != null)
                 _htmlContainer.HandleMouseLeave(this);
         }
@@ -411,7 +416,14 @@ namespace Avalonia.Controls.Html
         {
             base.OnPointerPressed(e);
             LeftMouseButton = true;
-            _htmlContainer?.HandleLeftMouseDown(this, e);
+            if (e.ClickCount == 1)
+            {
+                _htmlContainer?.HandleLeftMouseDown(this, e);
+            }
+            else if (e.ClickCount == 2)
+            {
+                _htmlContainer?.HandleMouseDoubleClick(this, e);
+            }
         }
 
         
@@ -426,19 +438,6 @@ namespace Avalonia.Controls.Html
             if (_htmlContainer != null)
                 _htmlContainer.HandleLeftMouseUp(this, e);
         }
-
-        //TODO: Implement double click
-        /*
-        /// <summary>
-        /// Handle mouse double click to select word under the mouse. 
-        /// </summary>
-        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
-        {
-            base.OnMouseDoubleClick(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseDoubleClick(this, e);
-        }
-        */
 
         /// <summary>
         /// Handle key down event for selection, copy and scrollbars handling.
@@ -518,8 +517,7 @@ namespace Avalonia.Controls.Html
         /// </summary>
         protected virtual void InvokeMouseMove()
         {
-
-            _htmlContainer.HandleMouseMove(this, (this.GetVisualRoot() as IInputRoot)?.MouseDevice?.GetPosition(this) ?? default(Point));
+            _htmlContainer.HandleMouseMove(this, _lastPosition ?? default(Point));
         }
 
         /// <summary>

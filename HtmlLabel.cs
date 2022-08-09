@@ -103,20 +103,21 @@ namespace Avalonia.Controls.Html
         /// <summary>
         /// Handle when dependency property value changes to update the underline HtmlContainer with the new value.
         /// </summary>
-        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> e)
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
 
+            var b = (e.NewValue as bool?) ?? false; 
             if (e.Property == AutoSizeProperty)
             {
-                if (e.NewValue.GetValueOrDefault<bool>())
+                if (b)
                 {
                     SetValue(AutoSizeHeightOnlyProperty, false);
                 }
             }
             else if (e.Property == AutoSizeHeightOnlyProperty)
             {
-                if (e.NewValue.GetValueOrDefault<bool>())
+                if (b)
                 {
                     SetValue(AutoSizeProperty, false);
                 }

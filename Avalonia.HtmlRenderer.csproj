@@ -5,10 +5,11 @@
     <EnableDefaultItems>False</EnableDefaultItems>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <NoWarn>CS0436</NoWarn>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Version>0.10.0</Version>
-    <Copyright>Copyright 2022 &#169; The AvaloniaUI Project</Copyright>
+    <Copyright>Copyright 2022 © The AvaloniaUI Project</Copyright>
     <PackageProjectUrl>https://avaloniaui.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AvaloniaUI/Avalonia.HtmlRenderer/</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -122,7 +123,7 @@
     <Compile Include="Utilities\Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Avalonia" Version="0.10.999-cibuild0022654-beta" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 </Project>
