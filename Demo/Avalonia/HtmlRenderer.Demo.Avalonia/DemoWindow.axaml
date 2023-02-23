@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Avalonia="clr-namespace:TheArtOfDev.HtmlRenderer.Demo.Avalonia"
-        Title="HTML Renderer Avalonia Demo" Height="486" Width="900">
+        Title="HTML Renderer Avalonia Demo" Height="800" Width="900">
     <Window.Resources>
         <Avalonia:ToolStripImageConverter x:Key="Converter" />
     </Window.Resources>

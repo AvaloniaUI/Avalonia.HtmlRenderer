@@ -20,9 +20,9 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="150" MinHeight="50" />
             </Grid.RowDefinitions>
-            <av:HtmlPanel x:Name="_htmlPanel" Grid.Column="0">
+            <av:HtmlPanel x:Name="_htmlPanel" Grid.Column="0" Background="MintCream">
                 <ToolTip.Tip>
-                    <ToolTip BorderBrush="Transparent" Padding="0">
+                    <ToolTip BorderBrush="Transparent" Padding="0" ShowDelay="5000">
                         <av:HtmlLabel x:Name="_htmlTooltipLabel"/>
                     </ToolTip>
                 </ToolTip.Tip>

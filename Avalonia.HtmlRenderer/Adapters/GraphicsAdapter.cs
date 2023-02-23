@@ -16,6 +16,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Media.TextFormatting;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Utils;
@@ -39,6 +40,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// if to release the graphics object on dispose
         /// </summary>
         private readonly bool _releaseGraphics;
+        private readonly RRect _whiteSpaceSize;
 
         #endregion
 
@@ -102,51 +104,23 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override RSize MeasureString(string str, RFont font)
         {
-            var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, Brushes.Red);
-            return new RSize(formattedText.WidthIncludingTrailingWhitespace, formattedText.Height);
+            var fontAdapter = (FontAdapter)font;
+            var formattedLine = TextFormatter.Current.FormatLine(
+                new CustomTextSource(str, fontAdapter.TextRunProperties),
+                0, double.MaxValue, fontAdapter.TextParagraphProperties);
+            
+            return new RSize(formattedLine.WidthIncludingTrailingWhitespace, formattedLine.Height);
         }
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
         {
-            charFit = 0;
-            charFitWidth = 0;
-            bool handled = false;
-            IGlyphTypeface glyphTypeface = ((FontAdapter)font).GlyphTypeface;
-            if (glyphTypeface != null)
-            {
-                var emHeight = glyphTypeface.Metrics.DesignEmHeight;
-                handled = true;
-                double width = 0;
-                for (int i = 0; i < str.Length; i++)
-                {
-                    if (glyphTypeface.TryGetGlyphMetrics(str[i], out var metrics))
-                    {
-                        double advanceWidth = metrics.Width * (font.Size / emHeight) * 96d / 72d;
-                        if (!(width + advanceWidth < maxWidth))
-                        {
-                            charFit = i;
-                            charFitWidth = width;
-                            break;
-                        }
-                        width += advanceWidth;
-                    }
-                    else
-                    {
-                        handled = false;
-                        break;
-                    }
-                }
-            }
-
-            if (!handled)
-            {
-                var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, Brushes.Red)
-                {
-                    MaxTextWidth = maxWidth
-                };
-                charFit = str.Length;
-                charFitWidth = formattedText.WidthIncludingTrailingWhitespace;
-            }
+            var fontAdapter = (FontAdapter)font;
+            var formattedLine = TextFormatter.Current.FormatLine(
+                new CustomTextSource(str, fontAdapter.TextRunProperties),
+                0, maxWidth, fontAdapter.TextParagraphProperties);
+                
+            charFit = formattedLine.Length;
+            charFitWidth = formattedLine.WidthIncludingTrailingWhitespace;
         }
 
         public override void DrawString(string str, RFont font, RColor color, RPoint point, RSize size, bool rtl)
@@ -258,6 +232,29 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             }
         }
 
+        
+        internal readonly struct CustomTextSource : ITextSource
+        {
+            private readonly TextRunProperties _defaultProperties;
+            private readonly string _text;
+
+            public CustomTextSource(string text, TextRunProperties defaultProperties)
+            {
+                _text = text;
+                _defaultProperties = defaultProperties;
+            }
+            
+            public TextRun GetTextRun(int textSourceIndex)
+            {
+                if (textSourceIndex >= _text.Length)
+                {
+                    return new TextEndOfParagraph();
+                }
+
+                return new TextCharacters(_text, _defaultProperties);
+            }
+        }
+        
         #endregion
     }
 }

@@ -10,8 +10,11 @@
 // - Sun Tsu,
 // "The Art of War"
 
+using System.Globalization;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using TheArtOfDev.HtmlRenderer.Adapters;
+using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 
 namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 {
@@ -66,8 +69,15 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             var emHeight = _glyphTypeface.Metrics.DesignEmHeight;
             _height = 96d / 72d * (_size / emHeight) * _glyphTypeface.Metrics.LineSpacing;
             _underlineOffset = 96d / 72d * (_size / emHeight) * (_glyphTypeface.Metrics.LineSpacing + _glyphTypeface.Metrics.UnderlinePosition);
+
+            TextRunProperties = new GenericTextRunProperties(font, 96d / 72d * size, null, null, null, BaselineAlignment.Baseline, CultureInfo.CurrentCulture);
+            TextParagraphProperties = new GenericTextParagraphProperties(TextRunProperties, textWrap: TextWrapping.Wrap);
         }
 
+        internal TextRunProperties TextRunProperties { get; }
+        
+        internal TextParagraphProperties TextParagraphProperties { get; }
+        
         /// <summary>
         /// the underline win-forms font.
         /// </summary>
