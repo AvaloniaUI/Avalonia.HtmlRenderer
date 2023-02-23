@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Utils;
@@ -41,9 +42,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         #endregion
 
-
-        private readonly Stack<IDisposable> _clipStack = new Stack<IDisposable>();
-
+        private readonly Stack<DrawingContext.PushedState> _clipStackInt = new Stack<DrawingContext.PushedState>();
 
         /// <summary>
         /// Init.
@@ -69,33 +68,28 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             _g = null;
             _releaseGraphics = false;
         }
-        
-        
 
         public override void PopClip()
         {
-            _clipStack.Pop()?.Dispose();
+            _clipStackInt.Pop().Dispose();
+            _clipStack.Pop();
         }
 
         public override void PushClip(RRect rect)
         {
-            _clipStack.Push(_g.PushClip(Util.Convert(rect)));
-            //_clipStack.Push(rect);
-            //_g.PushClip(new RectangleGeometry(Utils.Convert(rect)));
+            _clipStackInt.Push(_g.PushClip(Utils.Convert(rect)));
+            _clipStack.Push(rect);
         }
 
         public override void PushClipExclude(RRect rect)
         {
-            _clipStack.Push(null);
-
-            //TODO: Implement exclude rect, see #128
-            //var geometry = new CombinedGeometry();
-            //geometry.Geometry1 = new RectangleGeometry(Utils.Convert(_clipStack.Peek()));
-            //geometry.Geometry2 = new RectangleGeometry(Utils.Convert(rect));
-            //geometry.GeometryCombineMode = GeometryCombineMode.Exclude;
-
-            //_clipStack.Push(_clipStack.Peek());
-            //_g.PushClip(geometry);
+            var geometry = new CombinedGeometry();
+            geometry.Geometry1 = new RectangleGeometry(Utils.Convert(_clipStack.Peek()));
+            geometry.Geometry2 = new RectangleGeometry(Utils.Convert(rect));
+            geometry.GeometryCombineMode = GeometryCombineMode.Exclude;
+            
+            _clipStack.Push(_clipStack.Peek());
+            _clipStackInt.Push(_g.PushGeometryClip(geometry));
         }
 
         public override Object SetAntiAliasSmoothingMode()
@@ -108,84 +102,93 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override RSize MeasureString(string str, RFont font)
         {
-            var text = GetText(str, font);
-            var measure = text.Bounds;
-            return new RSize(measure.Width, measure.Height);
-            
-        }
-
-        FormattedText GetText(string str, RFont font)
-        {
-            var f = ((FontAdapter)font);
-            return new FormattedText
-            {
-                Text = str,
-                Typeface = new Typeface(f.Name, f.FontStyle, f.Weight),
-                FontSize = font.Size
-            };
+            var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, Brushes.Red);
+            return new RSize(formattedText.WidthIncludingTrailingWhitespace, formattedText.Height);
         }
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
         {
-            var text = GetText(str, font);
-            var fullLength = text.Bounds.Width;
-            if (fullLength < maxWidth)
+            charFit = 0;
+            charFitWidth = 0;
+            bool handled = false;
+            IGlyphTypeface glyphTypeface = ((FontAdapter)font).GlyphTypeface;
+            if (glyphTypeface != null)
             {
-                charFitWidth = fullLength;
-                charFit = str.Length;
-                return;
-            }
-
-            int lastLen = 0;
-            double lastMeasure = 0;
-            BinarySearch(len =>
-            {
-                text = GetText(str.Substring(0, len), font);
-                var size = text.Bounds.Width;
-                lastMeasure = size;
-                lastLen = len;
-                if (size <= maxWidth)
-                    return -1;
-                return 1;
-
-            }, 0, str.Length);
-            if (lastMeasure > maxWidth)
-            {
-                lastLen--;
-                lastMeasure = GetText(str.Substring(0, lastLen), font).Bounds.Width;
-            }
-            charFit = lastLen;
-            charFitWidth = lastMeasure;
-
-        }
-
-        private static int BinarySearch(Func<int, int> condition, int start, int end)
-        {
-            do
-            {
-                int ind = start + (end - start)/2;
-                int res = condition(ind);
-                if (res == 0)
-                    return ind;
-                else if (res > 0)
+                handled = true;
+                double width = 0;
+                for (int i = 0; i < str.Length; i++)
                 {
-                    if (start != ind)
-                        start = ind;
-                    else
-                        start = ind + 1;
-                }
-                else
-                    end = ind;
+                    if (glyphTypeface.TryGetGlyphMetrics(str[i], out var metrics))
+                    {
+                        double advanceWidth = metrics.Width * font.Size * 96d / 72d;
 
-            } while (end > start);
-            return -1;
+                        if (!(width + advanceWidth < maxWidth))
+                        {
+                            charFit = i;
+                            charFitWidth = width;
+                            break;
+                        }
+                        width += advanceWidth;
+                    }
+                    else
+                    {
+                        handled = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!handled)
+            {
+                var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, Brushes.Red);
+                charFit = str.Length;
+                charFitWidth = formattedText.WidthIncludingTrailingWhitespace;
+            }
         }
 
         public override void DrawString(string str, RFont font, RColor color, RPoint point, RSize size, bool rtl)
         {
-            var text = GetText(str, font);
-            text.Constraint = Util.Convert(size);
-            _g.DrawText(new SolidColorBrush(Util.Convert(color)), Util.Convert(point), text);
+            var colorConv = ((BrushAdapter)_adapter.GetSolidBrush(color)).Brush;
+
+            bool glyphRendered = false;
+            IGlyphTypeface glyphTypeface = ((FontAdapter)font).GlyphTypeface;
+            if (glyphTypeface != null)
+            {
+                double width = 0;
+                ushort[] glyphs = new ushort[str.Length];
+                double[] widths = new double[str.Length];
+
+                int i = 0;
+                for (; i < str.Length; i++)
+                {
+                    if (!glyphTypeface.TryGetGlyph(str[i], out var glyph))
+                        break;
+                    if (!glyphTypeface.TryGetGlyphMetrics(str[i], out var glyphMetrics))
+                        break;
+
+                    glyphs[i] = glyph;
+                    width += glyphMetrics.Width;
+                    widths[i] = 96d / 72d * font.Size * glyphMetrics.Width;
+                }
+
+                if (i >= str.Length)
+                {
+                    point.Y += glyphTypeface.Metrics.Ascent * font.Size * 96d / 72d;
+                    point.X += rtl ? 96d / 72d * font.Size * width : 0;
+
+                    glyphRendered = true;
+                    var glyphRun = new GlyphRun(glyphTypeface, 96d / 72d * font.Size, str.AsMemory(), glyphs,
+                        Utils.ConvertRound(point), rtl ? 1 : 0);
+                    _g.DrawGlyphRun(colorConv, glyphRun);
+                }
+            }
+
+            if (!glyphRendered)
+            {
+                var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, rtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, colorConv);
+                point.X += rtl ? formattedText.Width : 0;
+                _g.DrawText(formattedText, Utils.ConvertRound(point));
+            }
         }
 
         public override RBrush GetTextureBrush(RImage image, RRect dstRect, RPoint translateTransformLocation)
@@ -193,9 +196,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             var brush = new ImageBrush(((ImageAdapter)image).Image);
             brush.Stretch = Stretch.None;
             brush.TileMode = TileMode.Tile;
-            brush.DestinationRect = new RelativeRect(Util.Convert(dstRect).Translate(Util.Convert(translateTransformLocation) - new Point()), RelativeUnit.Absolute);
+            brush.DestinationRect = new RelativeRect(Utils.Convert(dstRect).Translate(Utils.Convert(translateTransformLocation) - new Point()), RelativeUnit.Absolute);
+            brush.Transform = new TranslateTransform(translateTransformLocation.X, translateTransformLocation.Y);
 
-            return new BrushAdapter(brush);
+            return new BrushAdapter(brush.ToImmutable());
         }
         
         public override RGraphicsPath GetGraphicsPath()
@@ -205,8 +209,6 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override void Dispose()
         {
-            while (_clipStack.Count != 0)
-                PopClip();
             if (_releaseGraphics)
                 _g.Dispose();
         }
@@ -254,13 +256,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override void DrawImage(RImage image, RRect destRect, RRect srcRect)
         {
-            _g.DrawImage(((ImageAdapter) image).Image, Util.Convert(srcRect), Util.Convert(destRect));
+            _g.DrawImage(((ImageAdapter) image).Image, Utils.Convert(srcRect), Utils.Convert(destRect));
         }
 
         public override void DrawImage(RImage image, RRect destRect)
         {
-            _g.DrawImage(((ImageAdapter) image).Image, new Rect(0, 0, image.Width, image.Height),
-                Util.Convert(destRect));
+            _g.DrawImage(((ImageAdapter)image).Image, Utils.ConvertRound(destRect));
         }
 
         public override void DrawPath(RPen pen, RGraphicsPath path)
@@ -280,9 +281,9 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
                 var g = new StreamGeometry();
                 using (var context = g.Open())
                 {
-                    context.BeginFigure(Util.Convert(points[0]), true);
+                    context.BeginFigure(Utils.Convert(points[0]), true);
                     for (int i = 1; i < points.Length; i++)
-                        context.LineTo(Util.Convert(points[i]));
+                        context.LineTo(Utils.Convert(points[i]));
                     context.EndFigure(false);
                 }
 
