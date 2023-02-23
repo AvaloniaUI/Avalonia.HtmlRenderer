@@ -1,4 +1,4 @@
-// "Therefore those skilled at the unorthodox
+﻿// "Therefore those skilled at the unorthodox
 // are infinite as heaven and earth,
 // inexhaustible as the great rivers.
 // When they come to an end,
@@ -11,16 +11,18 @@
 // "The Art of War"
 
 using System;
+using System.ComponentModel;
+using Avalonia;
 using Avalonia.Media;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
-using TheArtOfDev.HtmlRenderer.Avalonia.Adapters;
 using TheArtOfDev.HtmlRenderer.Core;
+using TheArtOfDev.HtmlRenderer.Avalonia.Adapters;
 
-namespace Avalonia.Controls.Html
+namespace TheArtOfDev.HtmlRenderer.Avalonia
 {
     /// <summary>
     /// Provides HTML rendering using the text property.<br/>
-    /// WPF control that will render html content in it's client rectangle.<br/>
+    /// Avalonia control that will render html content in it's client rectangle.<br/>
     /// Using <see cref="AutoSize"/> and <see cref="AutoSizeHeightOnly"/> client can control how the html content effects the
     /// size of the label. Either case scrollbars are never shown and html content outside of client bounds will be clipped.
     /// MaxWidth/MaxHeight and MinWidth/MinHeight with AutoSize can limit the max/min size of the control<br/>
@@ -53,20 +55,25 @@ namespace Avalonia.Controls.Html
         /// <summary>
         /// Automatically sets the size of the label by content size
         /// </summary>
+        [Category("Layout")]
+        [Description("Automatically sets the size of the label by content size.")]
         public bool AutoSize
         {
-            get => GetValue(AutoSizeProperty);
-            set => SetValue(AutoSizeProperty, value);
+            get { return (bool)GetValue(AutoSizeProperty); }
+            set { SetValue(AutoSizeProperty, value); }
         }
 
         /// <summary>
         /// Automatically sets the height of the label by content height (width is not effected).
         /// </summary>
+        [Category("Layout")]
+        [Description("Automatically sets the height of the label by content height (width is not effected)")]
         public virtual bool AutoSizeHeightOnly
         {
-            get => GetValue(AutoSizeHeightOnlyProperty);
-            set => SetValue(AutoSizeHeightOnlyProperty, value);
+            get { return (bool)GetValue(AutoSizeHeightOnlyProperty); }
+            set { SetValue(AutoSizeHeightOnlyProperty, value); }
         }
+
 
         #region Private methods
 
@@ -82,46 +89,45 @@ namespace Avalonia.Controls.Html
                     var horizontal = Padding.Left + Padding.Right + BorderThickness.Left + BorderThickness.Right;
                     var vertical = Padding.Top + Padding.Bottom + BorderThickness.Top + BorderThickness.Bottom;
 
-                    var size = new Size(Math.Min(MaxWidth, constraint.Width), Math.Min(MaxHeight, constraint.Height));
-                    var maxSize = new RSize(size.Width < Double.PositiveInfinity ? size.Width - horizontal : 0, size.Height < Double.PositiveInfinity ? size.Height - vertical : 0);
-                    _htmlContainer.HtmlContainerInt.MaxSize = maxSize;
+                    var size = new RSize(constraint.Width < Double.PositiveInfinity ? constraint.Width - horizontal : 0, constraint.Height < Double.PositiveInfinity ? constraint.Height - vertical : 0);
+                    var minSize = new RSize(MinWidth < Double.PositiveInfinity ? MinWidth - horizontal : 0, MinHeight < Double.PositiveInfinity ? MinHeight - vertical : 0);
+                    var maxSize = new RSize(MaxWidth < Double.PositiveInfinity ? MaxWidth - horizontal : 0, MaxHeight < Double.PositiveInfinity ? MaxHeight - vertical : 0);
 
-                    _htmlContainer.HtmlContainerInt.PerformLayout(ig);
-                    var newSize = _htmlContainer.ActualSize;
+                    var newSize = HtmlRendererUtils.Layout(ig, _htmlContainer.HtmlContainerInt, size, minSize, maxSize, AutoSize, AutoSizeHeightOnly);
+
                     constraint = new Size(newSize.Width + horizontal, newSize.Height + vertical);
-                    _htmlContainer.HtmlContainerInt.PageSize = _htmlContainer.HtmlContainerInt.ActualSize;
                 }
             }
 
             if (double.IsPositiveInfinity(constraint.Width) || double.IsPositiveInfinity(constraint.Height))
-                constraint = Size.Empty;
+                constraint = default;
 
             return constraint;
         }
 
-
         /// <summary>
         /// Handle when dependency property value changes to update the underline HtmlContainer with the new value.
         /// </summary>
-        protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> e)
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
 
             if (e.Property == AutoSizeProperty)
             {
-                if (e.NewValue.GetValueOrDefault<bool>())
+                if (e.GetNewValue<bool>())
                 {
                     SetValue(AutoSizeHeightOnlyProperty, false);
                 }
             }
             else if (e.Property == AutoSizeHeightOnlyProperty)
             {
-                if (e.NewValue.GetValueOrDefault<bool>())
+                if (e.GetNewValue<bool>())
                 {
                     SetValue(AutoSizeProperty, false);
                 }
             }
         }
+
         #endregion
     }
 }

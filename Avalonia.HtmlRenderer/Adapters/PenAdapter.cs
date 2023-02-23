@@ -1,4 +1,4 @@
-// "Therefore those skilled at the unorthodox
+﻿// "Therefore those skilled at the unorthodox
 // are infinite as heaven and earth,
 // inexhaustible as the great rivers.
 // When they come to an end,
@@ -10,8 +10,8 @@
 // - Sun Tsu,
 // "The Art of War"
 
-using System.Collections.Generic;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 
@@ -25,7 +25,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// The actual Avalonia brush instance.
         /// </summary>
-        private readonly IBrush _brush;
+        private readonly IImmutableBrush _brush;
 
         /// <summary>
         /// the width of the pen
@@ -35,12 +35,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// the dash style of the pen
         /// </summary>
-        private IDashStyle _dashStyle;
+        private IDashStyle _dashStyle = null;
 
         /// <summary>
         /// Init.
         /// </summary>
-        public PenAdapter(IBrush brush)
+        public PenAdapter(IImmutableBrush brush)
         {
             _brush = brush;
         }
@@ -53,25 +53,35 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override RDashStyle DashStyle
         {
-            set { DashStyles.TryGetValue(value, out _dashStyle); }
+            set
+            {
+                switch (value)
+                {
+                    case RDashStyle.Dash:
+                        _dashStyle = global::Avalonia.Media.DashStyle.Dash;
+                        break;
+                    case RDashStyle.Dot:
+                        _dashStyle = global::Avalonia.Media.DashStyle.Dot;
+                        break;
+                    case RDashStyle.DashDot:
+                        _dashStyle = global::Avalonia.Media.DashStyle.DashDot;
+                        break;
+                    case RDashStyle.DashDotDot:
+                        _dashStyle = global::Avalonia.Media.DashStyle.DashDotDot;
+                        break;
+                    default:
+                        _dashStyle = null;
+                        break;
+                }
+            }
         }
-
-        private static readonly Dictionary<RDashStyle, IDashStyle> DashStyles = new Dictionary<RDashStyle, IDashStyle>
-        {
-            {RDashStyle.Solid, null },
-            {RDashStyle.Dash, global::Avalonia.Media.DashStyle.Dash },
-            {RDashStyle.DashDot, global::Avalonia.Media.DashStyle.DashDot },
-            {RDashStyle.DashDotDot, global::Avalonia.Media.DashStyle.DashDotDot },
-            {RDashStyle.Dot, global::Avalonia.Media.DashStyle.Dot }
-        };
 
         /// <summary>
         /// Create the actual Avalonia pen instance.
         /// </summary>
-        public Pen CreatePen()
+        public IPen CreatePen()
         {
-            var pen = new Pen(_brush, _width, _dashStyle);
-            return pen;
+            return new ImmutablePen(_brush, _width, (ImmutableDashStyle)_dashStyle);
         }
     }
 }

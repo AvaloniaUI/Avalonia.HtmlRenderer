@@ -1,4 +1,4 @@
-// "Therefore those skilled at the unorthodox
+﻿// "Therefore those skilled at the unorthodox
 // are infinite as heaven and earth,
 // inexhaustible as the great rivers.
 // When they come to an end,
@@ -12,7 +12,6 @@
 
 using Avalonia.Media;
 using TheArtOfDev.HtmlRenderer.Adapters;
-using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 
 namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 {
@@ -21,10 +20,17 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
     /// </summary>
     internal sealed class FontAdapter : RFont
     {
-        public RFontStyle Style { get; }
-
         #region Fields and Consts
 
+        /// <summary>
+        /// the underline win-forms font.
+        /// </summary>
+        private readonly Typeface _font;
+
+        /// <summary>
+        /// The glyph font for the font
+        /// </summary>
+        private readonly IGlyphTypeface _glyphTypeface;
 
         /// <summary>
         /// the size of the font
@@ -45,7 +51,6 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// Cached font whitespace width.
         /// </summary>
         private double _whitespaceWidth = -1;
-        
 
         #endregion
 
@@ -53,22 +58,27 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// Init.
         /// </summary>
-        public FontAdapter(string fontFamily, double size, RFontStyle style)
+        public FontAdapter(Typeface font, double size)
         {
-            Style = style;
-            Name = fontFamily;
+            _font = font;
             _size = size;
-            //TODO: Somehow get proper line spacing and underlinePosition
-            var lineSpacing = 1;
-            var underlinePosition = 0;
-
-            _height = 96d / 72d * _size * lineSpacing;
-            _underlineOffset = 96d / 72d * _size * (lineSpacing + underlinePosition);
-
+            _glyphTypeface = FontManager.Current.GetOrAddGlyphTypeface(font);
+            _height = 96d / 72d * _size * _glyphTypeface.Metrics.LineSpacing;
+            _underlineOffset = 96d / 72d * _size * (_glyphTypeface.Metrics.LineSpacing + _glyphTypeface.Metrics.UnderlinePosition);
         }
 
-        public string Name { get; set; }
+        /// <summary>
+        /// the underline win-forms font.
+        /// </summary>
+        public Typeface Font
+        {
+            get { return _font; }
+        }
 
+        public IGlyphTypeface GlyphTypeface
+        {
+            get { return _glyphTypeface; }
+        }
 
         public override double Size
         {
@@ -98,9 +108,5 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             }
             return _whitespaceWidth;
         }
-
-        public FontStyle FontStyle => Style.HasFlag(RFontStyle.Italic) ? FontStyle.Italic : FontStyle.Normal;
-
-        public FontWeight Weight => Style.HasFlag(RFontStyle.Bold) ? FontWeight.Bold : FontWeight.Normal;
     }
 }

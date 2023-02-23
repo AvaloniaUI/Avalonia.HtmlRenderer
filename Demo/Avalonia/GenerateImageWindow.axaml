@@ -1,0 +1,14 @@
+﻿<Window x:Class="TheArtOfDev.HtmlRenderer.Demo.Avalonia.GenerateImageWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GenerateImageWindow" Height="300" Width="500" WindowStartupLocation="CenterOwner">
+    <DockPanel Background="#BFDBFF">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <Button Content="Re-Generate" Focusable="False" Click="OnGenerateImage_Click" />
+            <Button Content="Save to File" Click="OnSaveToFile_click"/>
+        </StackPanel>
+        <DockPanel x:Name="_imageBoxBorder">
+            <Image x:Name="_imageBox" Stretch="None" />
+        </DockPanel>
+    </DockPanel>
+</Window>

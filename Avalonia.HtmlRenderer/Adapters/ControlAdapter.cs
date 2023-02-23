@@ -10,16 +10,12 @@
 // - Sun Tsu,
 // "The Art of War"
 
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Html;
 using Avalonia.Input;
-using Avalonia.VisualTree;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Utils;
 using TheArtOfDev.HtmlRenderer.Avalonia.Utilities;
-// ReSharper disable ConvertPropertyToExpressionBody
 
 namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 {
@@ -54,24 +50,17 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override RPoint MouseLocation
         {
-            get
-            {
-                var pos = (_control.GetVisualRoot() as IInputRoot)?.MouseDevice?.Position ?? default(PixelPoint);
-                return Util.Convert(pos);
-            }
+            get { return Utils.Convert((_control as HtmlControl)?.LastPointerArgs?.GetPosition(null) ?? default); }
         }
 
-        private bool _leftMouseButton;
-        public override bool LeftMouseButton => (_control as HtmlControl)?.LeftMouseButton ?? false;
+        public override bool LeftMouseButton
+        {
+            get { return (_control as HtmlControl)?.LastPointerArgs?.GetCurrentPoint(null).Properties.IsLeftButtonPressed ?? false; }
+        }
 
         public override bool RightMouseButton
         {
-            get
-            {
-                return false;
-                //TODO: Implement right mouse click
-                //return Mouse.RightButton == MouseButtonState.Pressed;
-            }
+            get { return (_control as HtmlControl)?.LastPointerArgs?.GetCurrentPoint(null).Properties.IsRightButtonPressed ?? false; }
         }
 
         public override void SetCursorDefault()
@@ -91,8 +80,11 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override void DoDragDropCopy(object dragDropData)
         {
-            //TODO: Implement DragDropCopy
-            //DragDrop.DoDragDrop(_control, dragDropData, DragDropEffects.Copy);
+            var args = (_control as HtmlControl)?.LastPointerArgs;
+            if (args != null)
+            {
+                DragDrop.DoDragDrop(args, (IDataObject)dragDropData, DragDropEffects.Copy);
+            }
         }
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)

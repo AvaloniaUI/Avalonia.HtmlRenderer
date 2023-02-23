@@ -1,4 +1,4 @@
-// "Therefore those skilled at the unorthodox
+﻿// "Therefore those skilled at the unorthodox
 // are infinite as heaven and earth,
 // inexhaustible as the great rivers.
 // When they come to an end,
@@ -36,17 +36,24 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// the underline Avalonia image.
         /// </summary>
-        public Bitmap Image => _image;
+        public Bitmap Image
+        {
+            get { return _image; }
+        }
 
-        public override double Width => _image.PixelSize.Width;
+        public override double Width
+        {
+            get { return _image.PixelSize.Width; }
+        }
 
-        public override double Height => _image.PixelSize.Height;
+        public override double Height
+        {
+            get { return _image.PixelSize.Height; }
+        }
 
         public override void Dispose()
         {
-            //TODO: Implement image disposal
-            /*if (_image.StreamSource != null)
-                _image.StreamSource.Dispose();*/
+            _image.Dispose();
         }
     }
 }

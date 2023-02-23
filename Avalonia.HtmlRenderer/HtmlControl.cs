@@ -1,4 +1,4 @@
-// "Therefore those skilled at the unorthodox
+﻿// "Therefore those skilled at the unorthodox
 // are infinite as heaven and earth,
 // inexhaustible as the great rivers.
 // When they come to an end,
@@ -11,17 +11,20 @@
 // "The Art of War"
 
 using System;
+using System.ComponentModel;
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using TheArtOfDev.HtmlRenderer.Core;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.Avalonia;
-using TheArtOfDev.HtmlRenderer.Avalonia.Adapters;
+using Point = Avalonia.Point;
+using Size = Avalonia.Size;
 
-namespace Avalonia.Controls.Html
+namespace TheArtOfDev.HtmlRenderer.Avalonia
 {
     /// <summary>
     /// Provides HTML rendering using the text property.<br/>
@@ -53,9 +56,10 @@ namespace Avalonia.Controls.Html
     /// Raised when an error occurred during html rendering.<br/>
     /// </para>
     /// </summary>
-    
     public class HtmlControl : Control
     {
+        #region Fields and Consts
+
         /// <summary>
         /// Underline html container instance.
         /// </summary>
@@ -70,6 +74,11 @@ namespace Avalonia.Controls.Html
         /// The last position of the scrollbars to know if it has changed to update mouse
         /// </summary>
         protected Point _lastScrollOffset;
+
+        #endregion
+
+
+        #region Dependency properties / routed events
 
         public static readonly AvaloniaProperty AvoidImagesLateLoadingProperty = 
             AvaloniaProperty.Register<HtmlControl, bool>(nameof(AvoidImagesLateLoading), defaultValue: false);
@@ -88,14 +97,13 @@ namespace Avalonia.Controls.Html
             Border.BackgroundProperty.AddOwner<HtmlControl>();
 
         public static readonly AvaloniaProperty BorderThicknessProperty =
-            AvaloniaProperty.Register<HtmlControl, Thickness>(nameof(BorderThickness), new Thickness(0));
+            Border.BorderThicknessProperty.AddOwner<HtmlControl>();
 
         public static readonly AvaloniaProperty BorderBrushProperty =
-    AvaloniaProperty.Register<HtmlControl, IBrush>(nameof(BorderBrush));
+            Border.BorderBrushProperty.AddOwner<HtmlControl>();
 
         public static readonly AvaloniaProperty PaddingProperty =
-            AvaloniaProperty.Register<HtmlControl, Thickness>(nameof(Padding), new Thickness(0));
-
+            Decorator.PaddingProperty.AddOwner<HtmlControl>();
         public static readonly RoutedEvent LoadCompleteEvent =
             RoutedEvent.Register<RoutedEventArgs>("LoadComplete",  RoutingStrategies.Bubble, typeof(HtmlControl));
         public static readonly RoutedEvent LinkClickedEvent =
@@ -106,22 +114,12 @@ namespace Avalonia.Controls.Html
             = RoutedEvent.Register<HtmlRendererRoutedEventArgs<HtmlRefreshEventArgs>>("Refresh", RoutingStrategies.Bubble, typeof(HtmlControl));
         public static readonly RoutedEvent StylesheetLoadEvent 
             = RoutedEvent.Register<HtmlRendererRoutedEventArgs<HtmlStylesheetLoadEventArgs>>("StylesheetLoad", RoutingStrategies.Bubble, typeof(HtmlControl));
-
         public static readonly RoutedEvent ImageLoadEvent
             = RoutedEvent.Register<HtmlRendererRoutedEventArgs<HtmlImageLoadEventArgs>>("ImageLoad", RoutingStrategies.Bubble,
                 typeof (HtmlControl));
+        #endregion
 
-        static HtmlControl()
-        {
-            FocusableProperty.OverrideDefaultValue(typeof(HtmlControl), true);
-            AffectsRender<HtmlControl>(TextProperty);
-
-            AvoidImagesLateLoadingProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
-            IsSelectionEnabledProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
-            IsContextMenuEnabledProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
-            BaseStylesheetProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
-            TextProperty.Changed.AddClassHandler<HtmlControl>(OnAvaloniaProperty_valueChanged);
-        }
+        internal PointerEventArgs LastPointerArgs { get; private set; }
 
         /// <summary>
         /// Creates a new HtmlPanel and sets a basic css for it's styling.
@@ -135,10 +133,36 @@ namespace Avalonia.Controls.Html
             _htmlContainer.Refresh += OnRefresh;
             _htmlContainer.StylesheetLoad += OnStylesheetLoad;
             _htmlContainer.ImageLoad += OnImageLoad;
-        }
 
-        //Hack for adapter
-        internal bool LeftMouseButton { get; private set; }
+            PointerMoved += (sender, e) =>
+            {
+                LastPointerArgs = e;
+                _htmlContainer.HandleMouseMove(this, e.GetPosition(this));
+            };
+            PointerExited += (sender, e) =>
+            {
+                LastPointerArgs = null;
+                _htmlContainer.HandleMouseLeave(this);
+            };
+            PointerPressed += (sender, e) =>
+            {
+                LastPointerArgs = e;
+                _htmlContainer?.HandleLeftMouseDown(this, e);
+            };
+            PointerReleased += (sender, e) =>
+            {
+                LastPointerArgs = e;
+                _htmlContainer.HandleLeftMouseUp(this, e);
+            };
+            DoubleTapped += (sender, e) =>
+            {
+                _htmlContainer.HandleMouseDoubleClick(this, e);
+            };
+            KeyDown += (sender, e) =>
+            {
+                _htmlContainer.HandleKeyDown(this, e);
+            };
+        }
 
         /// <summary>
         /// Raised when the set html document has been fully loaded.<br/>
@@ -327,19 +351,21 @@ namespace Avalonia.Controls.Html
                 _htmlContainer.ClearSelection();
         }
 
-        
 
-        //HACK: We don't have support for RenderSize for now
+        #region Private methods
+
         private Size RenderSize => new Size(Bounds.Width, Bounds.Height);
 
-        
+        /// <summary>
+        /// Perform paint of the html in the control.
+        /// </summary>
         public override void Render(DrawingContext context)
         {
             context.FillRectangle(Background,  new Rect(RenderSize));
 
             if (BorderThickness != new Thickness(0) && BorderBrush != null)
             {
-                var brush = new SolidColorBrush(Colors.Black);
+                var brush = new ImmutableSolidColorBrush(Colors.Black);
                 if (BorderThickness.Top > 0)
                     context.FillRectangle(brush, new Rect(0, 0, RenderSize.Width, BorderThickness.Top));
                 if (BorderThickness.Bottom > 0)
@@ -354,19 +380,6 @@ namespace Avalonia.Controls.Html
             var htmlHeight = HtmlHeight(RenderSize);
             if (_htmlContainer != null && htmlWidth > 0 && htmlHeight > 0)
             {
-                /*
-                //TODO: Revert antialiasing fixes
-                var windows = Window.GetWindow(this);
-                if (windows != null)
-                {
-                    // adjust render location to round point so we won't get anti-alias smugness
-                    var wPoint = TranslatePoint(new Point(0, 0), windows);
-                    wPoint.Offset(-(int)wPoint.X, -(int)wPoint.Y);
-                    var xTrans = wPoint.X < .5 ? -wPoint.X : 1 - wPoint.X;
-                    var yTrans = wPoint.Y < .5 ? -wPoint.Y : 1 - wPoint.Y;
-                    context.PushTransform(new TranslateTransform(xTrans, yTrans));
-                }*/
-
                 using (context.PushClip(new Rect(Padding.Left + BorderThickness.Left, Padding.Top + BorderThickness.Top,
                     htmlWidth, (int) htmlHeight)))
                 {
@@ -383,71 +396,6 @@ namespace Avalonia.Controls.Html
                     InvokeMouseMove();
                 }
             }
-        }
-
-        /// <summary>
-        /// Handle mouse move to handle hover cursor and text selection. 
-        /// </summary>
-        protected override void OnPointerMoved(PointerEventArgs e)
-        {
-            base.OnPointerMoved(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseMove(this, e.GetPosition(this));
-        }
-        /// <summary>
-        /// Handle mouse leave to handle cursor change.
-        /// </summary>
-        protected override void OnPointerLeave(PointerEventArgs e)
-        {
-            base.OnPointerLeave(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseLeave(this);
-        }
-
-        /// <summary>
-        /// Handle mouse down to handle selection. 
-        /// </summary>
-        protected override void OnPointerPressed(PointerPressedEventArgs e)
-        {
-            base.OnPointerPressed(e);
-            LeftMouseButton = true;
-            _htmlContainer?.HandleLeftMouseDown(this, e);
-        }
-
-        
-
-        /// <summary>
-        /// Handle mouse up to handle selection and link click. 
-        /// </summary>
-        protected override void OnPointerReleased(PointerReleasedEventArgs e)
-        {
-            base.OnPointerReleased(e);
-            LeftMouseButton = false;
-            if (_htmlContainer != null)
-                _htmlContainer.HandleLeftMouseUp(this, e);
-        }
-
-        //TODO: Implement double click
-        /*
-        /// <summary>
-        /// Handle mouse double click to select word under the mouse. 
-        /// </summary>
-        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
-        {
-            base.OnMouseDoubleClick(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseDoubleClick(this, e);
-        }
-        */
-
-        /// <summary>
-        /// Handle key down event for selection, copy and scrollbars handling.
-        /// </summary>
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleKeyDown(this, e);
         }
 
         void RaiseRouted<T>(RoutedEvent ev, T arg)
@@ -518,52 +466,54 @@ namespace Avalonia.Controls.Html
         /// </summary>
         protected virtual void InvokeMouseMove()
         {
-
-            _htmlContainer.HandleMouseMove(this, (this.GetVisualRoot() as IInputRoot)?.MouseDevice?.GetPosition(this) ?? default(Point));
+            if (LastPointerArgs != null)
+            {
+                _htmlContainer.HandleMouseMove(this, LastPointerArgs.GetPosition(this));
+            }
         }
 
         /// <summary>
         /// Handle when dependency property value changes to update the underline HtmlContainer with the new value.
         /// </summary>
-        private static void OnAvaloniaProperty_valueChanged(IAvaloniaObject AvaloniaObject, AvaloniaPropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
         {
-            var control = AvaloniaObject as HtmlControl;
-            if (control != null)
-            {
-                var htmlContainer = control._htmlContainer;
-                if (e.Property == AvoidImagesLateLoadingProperty)
-                {
-                    htmlContainer.AvoidImagesLateLoading = (bool) e.NewValue;
-                }
-                else if (e.Property == IsSelectionEnabledProperty)
-                {
-                    htmlContainer.IsSelectionEnabled = (bool) e.NewValue;
-                }
-                else if (e.Property == IsContextMenuEnabledProperty)
-                {
-                    htmlContainer.IsContextMenuEnabled = (bool) e.NewValue;
-                }
-                else if (e.Property == BaseStylesheetProperty)
-                {
-                    var baseCssData = CssData.Parse(AvaloniaAdapter.Instance, (string) e.NewValue);
-                    control._baseCssData = baseCssData;
-                    htmlContainer.SetHtml(control.Text, baseCssData);
-                }
-                else if (e.Property == TextProperty)
-                {
-                    htmlContainer.ScrollOffset = new Point(0, 0);
-                    htmlContainer.SetHtml((string) e.NewValue, control._baseCssData);
-                    control.InvalidateMeasure();
-                    control.InvalidateVisual();
+            base.OnPropertyChanged(e);
 
-                    if (control.VisualRoot != null)
-                    {
-                        control.InvokeMouseMove();
-                    }
+            var htmlContainer = _htmlContainer;
+            if (e.Property == AvoidImagesLateLoadingProperty)
+            {
+                htmlContainer.AvoidImagesLateLoading = (bool)e.NewValue;
+            }
+            else if (e.Property == IsSelectionEnabledProperty)
+            {
+                htmlContainer.IsSelectionEnabled = (bool)e.NewValue;
+            }
+            else if (e.Property == IsContextMenuEnabledProperty)
+            {
+                htmlContainer.IsContextMenuEnabled = (bool)e.NewValue;
+            }
+            else if (e.Property == BaseStylesheetProperty)
+            {
+                var baseCssData = HtmlRender.ParseStyleSheet((string)e.NewValue);
+                _baseCssData = baseCssData;
+                htmlContainer.SetHtml(Text, baseCssData);
+            }
+            else if (e.Property == TextProperty)
+            {
+                htmlContainer.ScrollOffset = new Point(0, 0);
+                htmlContainer.SetHtml((string)e.NewValue, _baseCssData);
+                InvalidateMeasure();
+                InvalidateVisual();
+
+                if (VisualRoot != null)
+                {
+                    InvokeMouseMove();
                 }
             }
         }
 
+
+        #region Private event handlers
 
         private void OnLoadComplete(object sender, EventArgs e)
         {
@@ -614,5 +564,10 @@ namespace Avalonia.Controls.Html
             else
                 Dispatcher.UIThread.InvokeAsync(() => OnRefresh(e)).Wait();
         }
+
+        #endregion
+
+
+        #endregion
     }
 }

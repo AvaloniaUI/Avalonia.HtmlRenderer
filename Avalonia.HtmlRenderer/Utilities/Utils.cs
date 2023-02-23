@@ -17,12 +17,12 @@ using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
 {
     /// <summary>
-    /// Utilities for converting WPF entities to HtmlRenderer core entities.
+    /// Utilities for converting Avalonia entities to HtmlRenderer core entities.
     /// </summary>
-    internal static class Util
+    internal static class Utils
     {
         /// <summary>
-        /// Convert from WPF point to core point.
+        /// Convert from Avalonia point to core point.
         /// </summary>
         public static RPoint Convert(Point p)
         {
@@ -30,15 +30,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from Avalonia PixelPoint to core point.
-        /// </summary>
-        public static RPoint Convert(PixelPoint p)
-        {
-            return new RPoint(p.X, p.Y);
-        }
-
-        /// <summary>
-        /// Convert from WPF point to core point.
+        /// Convert from Avalonia point to core point.
         /// </summary>
         public static Point[] Convert(RPoint[] points)
         {
@@ -49,7 +41,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from core point to WPF point.
+        /// Convert from core point to Avalonia point.
         /// </summary>
         public static Point Convert(RPoint p)
         {
@@ -57,7 +49,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from core point to WPF point.
+        /// Convert from core point to Avalonia point.
         /// </summary>
         public static Point ConvertRound(RPoint p)
         {
@@ -65,7 +57,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from WPF size to core size.
+        /// Convert from Avalonia size to core size.
         /// </summary>
         public static RSize Convert(Size s)
         {
@@ -73,7 +65,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from core size to WPF size.
+        /// Convert from core size to Avalonia size.
         /// </summary>
         public static Size Convert(RSize s)
         {
@@ -81,7 +73,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from core point to WPF point.
+        /// Convert from core point to Avalonia point.
         /// </summary>
         public static Size ConvertRound(RSize s)
         {
@@ -89,7 +81,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from WPF rectangle to core rectangle.
+        /// Convert from Avalonia rectangle to core rectangle.
         /// </summary>
         public static RRect Convert(Rect r)
         {
@@ -97,7 +89,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from core rectangle to WPF rectangle.
+        /// Convert from core rectangle to Avalonia rectangle.
         /// </summary>
         public static Rect Convert(RRect r)
         {
@@ -105,7 +97,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from core rectangle to WPF rectangle.
+        /// Convert from core rectangle to Avalonia rectangle.
         /// </summary>
         public static Rect ConvertRound(RRect r)
         {
@@ -113,7 +105,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from WPF color to core color.
+        /// Convert from Avalonia color to core color.
         /// </summary>
         public static RColor Convert(Color c)
         {
@@ -121,7 +113,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Utilities
         }
 
         /// <summary>
-        /// Convert from core color to WPF color.
+        /// Convert from core color to Avalonia color.
         /// </summary>
         public static Color Convert(RColor c)
         {

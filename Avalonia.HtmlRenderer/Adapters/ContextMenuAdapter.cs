@@ -11,41 +11,76 @@
 // "The Art of War"
 
 using System;
+using System.Collections.Generic;
+using Avalonia.Controls;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
+using TheArtOfDev.HtmlRenderer.Core.Utils;
 
 namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 {
     /// <summary>
     /// Adapter for Avalonia context menu for core.
     /// </summary>
-    internal sealed class NullContextMenuAdapter : RContextMenu
+    internal sealed class ContextMenuAdapter : RContextMenu
     {
-        //TODO: actually implement context menu
+        #region Fields and Consts
 
-        private int _itemCount;
-        public override int ItemsCount => _itemCount;
+        /// <summary>
+        /// the underline Avalonia context menu
+        /// </summary>
+        private readonly MenuFlyout _contextMenu;
+
+        #endregion
+
+
+        /// <summary>
+        /// Init.
+        /// </summary>
+        public ContextMenuAdapter()
+        {
+            _contextMenu = new MenuFlyout();
+        }
+
+        private IList<object> Items => ((IList<object>)_contextMenu.Items);
+        
+        public override int ItemsCount
+        {
+            get { return Items.Count; }
+        }
+
         public override void AddDivider()
         {
-            
+            Items.Add(new Separator());
         }
 
         public override void AddItem(string text, bool enabled, EventHandler onClick)
         {
-            _itemCount++;
+            ArgChecker.AssertArgNotNullOrEmpty(text, "text");
+            ArgChecker.AssertArgNotNull(onClick, "onClick");
+
+            var item = new MenuItem();
+            item.Header = text;
+            item.IsEnabled = enabled;
+            item.Click += (sender, args) => onClick(sender, args); 
+            Items.Add(item);
         }
 
         public override void RemoveLastDivider()
         {
-            _itemCount++;
+            if (Items[Items.Count - 1].GetType() == typeof(Separator))
+                Items.RemoveAt(Items.Count - 1);
         }
 
         public override void Show(RControl parent, RPoint location)
         {
+            _contextMenu.ShowAt(((ControlAdapter)parent).Control, true);
         }
 
         public override void Dispose()
         {
+            _contextMenu.Hide();
+            Items.Clear();
         }
     }
 }

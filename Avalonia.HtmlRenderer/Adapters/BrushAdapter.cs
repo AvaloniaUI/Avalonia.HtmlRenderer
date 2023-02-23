@@ -1,4 +1,4 @@
-// "Therefore those skilled at the unorthodox
+﻿// "Therefore those skilled at the unorthodox
 // are infinite as heaven and earth,
 // inexhaustible as the great rivers.
 // When they come to an end,
@@ -23,12 +23,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// The actual Avalonia brush instance.
         /// </summary>
-        private readonly IBrush _brush;
+        private readonly IImmutableBrush _brush;
 
         /// <summary>
         /// Init.
         /// </summary>
-        public BrushAdapter(IBrush brush)
+        public BrushAdapter(IImmutableBrush brush)
         {
             _brush = brush;
         }
@@ -36,7 +36,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// The actual Avalonia brush instance.
         /// </summary>
-        public IBrush Brush
+        public IImmutableBrush Brush
         {
             get { return _brush; }
         }

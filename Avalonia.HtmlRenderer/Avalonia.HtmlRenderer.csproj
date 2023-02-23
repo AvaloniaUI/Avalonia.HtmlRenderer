@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <EnableDefaultItems>False</EnableDefaultItems>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <NoWarn>CS0436</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>0.10.0</Version>
+    <Version>11.0.0-preview5</Version>
     <Copyright>Copyright 2022 &#169; The AvaloniaUI Project</Copyright>
     <PackageProjectUrl>https://avaloniaui.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AvaloniaUI/Avalonia.HtmlRenderer/</RepositoryUrl>
@@ -117,12 +117,14 @@
     <Compile Include="HtmlContainer.cs" />
     <Compile Include="HtmlControl.cs" />
     <Compile Include="HtmlLabel.cs" />
+    <Compile Include="HtmlRender.cs" />
+    <Compile Include="HtmlPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HtmlRendererRoutedEventArgs.cs" />
-    <Compile Include="Utilities\Util.cs" />
+    <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.0" />
+    <PackageReference Include="Avalonia" Version="11.0.0-preview5" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
   </ItemGroup>
 </Project>

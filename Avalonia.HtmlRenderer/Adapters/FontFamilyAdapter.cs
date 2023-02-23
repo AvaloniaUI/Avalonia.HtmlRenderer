@@ -1,4 +1,4 @@
-// "Therefore those skilled at the unorthodox
+﻿// "Therefore those skilled at the unorthodox
 // are infinite as heaven and earth,
 // inexhaustible as the great rivers.
 // When they come to an end,
@@ -10,6 +10,7 @@
 // - Sun Tsu,
 // "The Art of War"
 
+using Avalonia.Media;
 using TheArtOfDev.HtmlRenderer.Adapters;
 
 namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
@@ -19,11 +20,24 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
     /// </summary>
     internal sealed class FontFamilyAdapter : RFontFamily
     {
-        public FontFamilyAdapter(string fontFamily)
+        /// <summary>
+        /// the underline win-forms font.
+        /// </summary>
+        private readonly FontFamily _fontFamily;
+
+        /// <summary>
+        /// Init.
+        /// </summary>
+        public FontFamilyAdapter(FontFamily fontFamily)
         {
-            Name = fontFamily;
+            _fontFamily = fontFamily;
         }
-        
-        public override string Name { get; }
+
+        /// <summary>
+        /// the underline Avalonia font family.
+        /// </summary>
+        public FontFamily FontFamily => _fontFamily;
+
+        public override string Name => _fontFamily.Name;
     }
 }

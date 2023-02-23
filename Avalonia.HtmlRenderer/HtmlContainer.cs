@@ -1,4 +1,4 @@
-// "Therefore those skilled at the unorthodox
+﻿// "Therefore those skilled at the unorthodox
 // are infinite as heaven and earth,
 // inexhaustible as the great rivers.
 // When they come to an end,
@@ -14,13 +14,11 @@ using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Html;
 using Avalonia.Input;
 using Avalonia.Media;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Parse;
 using TheArtOfDev.HtmlRenderer.Core.Utils;
 using TheArtOfDev.HtmlRenderer.Avalonia.Adapters;
 using TheArtOfDev.HtmlRenderer.Avalonia.Utilities;
@@ -50,6 +48,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         public HtmlContainer()
         {
             _htmlContainerInt = new HtmlContainerInt(AvaloniaAdapter.Instance);
+            _htmlContainerInt.PageSize = new RSize(99999, 99999);
         }
 
         /// <summary>
@@ -207,8 +206,8 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// </example>
         public Point ScrollOffset
         {
-            get { return Util.Convert(_htmlContainerInt.ScrollOffset); }
-            set { _htmlContainerInt.ScrollOffset = Util.Convert(value); }
+            get { return Utils.Convert(_htmlContainerInt.ScrollOffset); }
+            set { _htmlContainerInt.ScrollOffset = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -217,8 +216,8 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// </summary>
         public Point Location
         {
-            get { return Util.Convert(_htmlContainerInt.Location); }
-            set { _htmlContainerInt.Location = Util.Convert(value); }
+            get { return Utils.Convert(_htmlContainerInt.Location); }
+            set { _htmlContainerInt.Location = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -230,8 +229,8 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// </summary>
         public Size MaxSize
         {
-            get { return Util.Convert(_htmlContainerInt.MaxSize); }
-            set { _htmlContainerInt.MaxSize = Util.Convert(value); }
+            get { return Utils.Convert(_htmlContainerInt.MaxSize); }
+            set { _htmlContainerInt.MaxSize = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -239,8 +238,8 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// </summary>
         public Size ActualSize
         {
-            get { return Util.Convert(_htmlContainerInt.ActualSize); }
-            internal set { _htmlContainerInt.ActualSize = Util.Convert(value); }
+            get { return Utils.Convert(_htmlContainerInt.ActualSize); }
+            internal set { _htmlContainerInt.ActualSize = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -304,7 +303,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// <returns>found attribute value or null if not found</returns>
         public string GetAttributeAt(Point location, string attribute)
         {
-            return _htmlContainerInt.GetAttributeAt(Util.Convert(location), attribute);
+            return _htmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
         }
 
         /// <summary>
@@ -316,7 +315,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             var linkElements = new List<LinkElementData<Rect>>();
             foreach (var link in HtmlContainerInt.GetLinks())
             {
-                linkElements.Add(new LinkElementData<Rect>(link.Id, link.Href, Util.Convert(link.Rectangle)));
+                linkElements.Add(new LinkElementData<Rect>(link.Id, link.Href, Utils.Convert(link.Rectangle)));
             }
             return linkElements;
         }
@@ -328,7 +327,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// <returns>css link href if exists or null</returns>
         public string GetLinkAt(Point location)
         {
-            return _htmlContainerInt.GetLinkAt(Util.Convert(location));
+            return _htmlContainerInt.GetLinkAt(Utils.Convert(location));
         }
 
         /// <summary>
@@ -341,7 +340,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         public Rect? GetElementRectangle(string elementId)
         {
             var r = _htmlContainerInt.GetElementRectangle(elementId);
-            return r.HasValue ? Util.Convert(r.Value) : (Rect?)null;
+            return r.HasValue ? Utils.Convert(r.Value) : (Rect?)null;
         }
 
         /// <summary>
@@ -364,7 +363,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            using (var ig = new GraphicsAdapter(g, Util.Convert(clip)))
+            using (var ig = new GraphicsAdapter(g, Utils.Convert(clip)))
             {
                 _htmlContainerInt.PerformPaint(ig);
             }
@@ -380,7 +379,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             ArgChecker.AssertArgNotNull(parent, "parent");
             ArgChecker.AssertArgNotNull(e, "e");
             
-            _htmlContainerInt.HandleMouseDown(new ControlAdapter(parent), Util.Convert(e.GetPosition(parent)));
+            _htmlContainerInt.HandleMouseDown(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)));
         }
 
         /// <summary>
@@ -394,7 +393,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             ArgChecker.AssertArgNotNull(e, "e");
 
             var mouseEvent = new RMouseEvent(true);
-            _htmlContainerInt.HandleMouseUp(new ControlAdapter(parent), Util.Convert(e.GetPosition(parent)), mouseEvent);
+            _htmlContainerInt.HandleMouseUp(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)), mouseEvent);
         }
 
         /// <summary>
@@ -402,12 +401,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// </summary>
         /// <param name="parent">the control hosting the html to set cursor and invalidate</param>
         /// <param name="e">mouse event args</param>
-        public void HandleMouseDoubleClick(Control parent, PointerEventArgs e)
+        public void HandleMouseDoubleClick(Control parent, TappedEventArgs e)
         {
             ArgChecker.AssertArgNotNull(parent, "parent");
             ArgChecker.AssertArgNotNull(e, "e");
 
-            _htmlContainerInt.HandleMouseDoubleClick(new ControlAdapter(parent), Util.Convert(e.GetPosition(parent)));
+            _htmlContainerInt.HandleMouseDoubleClick(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)));
         }
 
         /// <summary>
@@ -419,7 +418,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         {
             ArgChecker.AssertArgNotNull(parent, "parent");
 
-            _htmlContainerInt.HandleMouseMove(new ControlAdapter(parent), Util.Convert(mousePos));
+            _htmlContainerInt.HandleMouseMove(new ControlAdapter(parent), Utils.Convert(mousePos));
         }
 
         /// <summary>
