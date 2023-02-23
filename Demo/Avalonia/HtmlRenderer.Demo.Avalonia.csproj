@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <PublishAot>true</PublishAot>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>html.ico</ApplicationIcon>
