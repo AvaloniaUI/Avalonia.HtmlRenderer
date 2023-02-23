@@ -1,0 +1,26 @@
+﻿<Window x:Class="TheArtOfDev.HtmlRenderer.Demo.Avalonia.SampleWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Avalonia="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
+        Title="Sample Window" Height="300" Width="500" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Html Label" Margin="10 0"/>
+        <Border Grid.Row="1" Grid.Column="0" Margin="10 5">
+            <Avalonia:HtmlLabel x:Name="_htmlLabel" AutoSizeHeightOnly="True" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8" />
+        </Border>
+        <TextBlock Text="Html Panel" Grid.Row="2" Grid.Column="0" Margin="10 0"/>
+        <Avalonia:HtmlPanel x:Name="_htmlPanel" Grid.Row="3" Grid.Column="0" Margin="10 5" />
+        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="4" Width="4" Background="#BFDBFF" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
+    </Grid>
+</Window>

@@ -1,4 +1,4 @@
 [submodule "src/Avalonia.HtmlRenderer/external"]
-	path = external
+	path = Avalonia.HtmlRenderer/external
 	url = https://github.com/ArthurHub/HTML-Renderer.git
 	branch = master

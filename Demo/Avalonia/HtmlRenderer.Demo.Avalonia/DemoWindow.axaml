@@ -1,0 +1,58 @@
+﻿<Window x:Class="TheArtOfDev.HtmlRenderer.Demo.Avalonia.DemoWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Avalonia="clr-namespace:TheArtOfDev.HtmlRenderer.Demo.Avalonia"
+        Title="HTML Renderer Avalonia Demo" Height="800" Width="900">
+    <Window.Resources>
+        <Avalonia:ToolStripImageConverter x:Key="Converter" />
+    </Window.Resources>
+    <DockPanel Background="#BFDBFF">
+        <Grid x:Name="_toolBar" DockPanel.Dock="Top" Background="WhiteSmoke" Margin="0 0 0 3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                <Button Click="OnOpenSampleWindow_click" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding ConverterParameter=form, Converter={StaticResource Converter}}" Tag="form" MaxHeight="18" Margin="0 0 5 0"/>
+                        <TextBlock Text="Open Sample Window" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Separator/>
+                <Button Click="OnOpenInExternalView_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding ConverterParameter=chrome, Converter={StaticResource Converter}}" MaxHeight="18" Margin="0 0 5 0"/>
+                        <TextBlock Text="Open External" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <ToggleButton x:Name="_useGeneratedHtml" Click="OnUseGeneratedHtml_Click">
+                    <Image Source="{Binding ConverterParameter=code, Converter={StaticResource Converter}}" MaxHeight="16"/>
+                </ToggleButton>
+                <Separator/>
+                <Separator/>
+                <Button Click="OnGenerateImage_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding ConverterParameter=image, Converter={StaticResource Converter}}" MaxHeight="18" Margin="0 0 5 0"/>
+                        <TextBlock Text="Generate Image" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button IsEnabled="False">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding ConverterParameter=pdf, Converter={StaticResource Converter}}" MaxHeight="18" Margin="0 0 5 0"/>
+                        <TextBlock Text="Generate PDF" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <Button Grid.Column="1" Margin="4 0 2 0" Click="OnRunPerformance_Click" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{Binding ConverterParameter=stopwatch, Converter={StaticResource Converter}}" MaxHeight="18" Margin="0 0 5 0"/>
+                    <TextBlock Text="Run Performance" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+        <Avalonia:MainControl x:Name="_mainControl" />
+    </DockPanel>
+</Window>

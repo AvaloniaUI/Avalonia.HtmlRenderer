@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Avalonia.HtmlRenderer\Avalonia.HtmlRenderer.csproj" />
+    <ProjectReference Include="..\..\Common\HtmlRenderer.Demo.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="fonts\CustomFont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.0-preview5" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.0-preview5" />
+    <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
+  </ItemGroup>
+</Project>
