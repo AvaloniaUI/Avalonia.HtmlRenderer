@@ -31,32 +31,13 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
     {
         #region Fields/Consts
 
-        /// <summary>
-        /// the private font used for the demo
-        /// </summary>
-        //private readonly PrivateFontCollection _privateFont = new PrivateFontCollection();
-
         #endregion
         public DemoWindow()
         {
-            SamplesLoader.Init("Avalonia", typeof(HtmlRender).Assembly.GetName().Version.ToString());
-
             InitializeComponent();
             DataContext = this;
 
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
-            LoadCustomFonts();
-        }
-
-        /// <summary>
-        /// Load custom fonts to be used by renderer HTMLs
-        /// </summary>
-        private static void LoadCustomFonts()
-        {
-            HtmlRender.AddFontFamily(new FontFamily(
-                new Uri("avares://HtmlRenderer.Demo.Avalonia/fonts/CustomFont.ttf"),
-                "1 Smoothy DNA"));
         }
 
         /// <summary>

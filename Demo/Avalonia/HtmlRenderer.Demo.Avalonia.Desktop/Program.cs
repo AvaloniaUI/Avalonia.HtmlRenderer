@@ -1,7 +1,7 @@
-﻿using Avalonia;
-using System;
+﻿using System;
+using Avalonia;
 
-namespace HtmlRenderer.Demo.Avalonia2;
+namespace HtmlRenderer.Demo.Avalonia.Desktop;
 
 class Program
 {
