@@ -114,14 +114,14 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             IGlyphTypeface glyphTypeface = ((FontAdapter)font).GlyphTypeface;
             if (glyphTypeface != null)
             {
+                var emHeight = glyphTypeface.Metrics.DesignEmHeight;
                 handled = true;
                 double width = 0;
                 for (int i = 0; i < str.Length; i++)
                 {
                     if (glyphTypeface.TryGetGlyphMetrics(str[i], out var metrics))
                     {
-                        double advanceWidth = metrics.Width * font.Size * 96d / 72d;
-
+                        double advanceWidth = metrics.Width * (font.Size / emHeight) * 96d / 72d;
                         if (!(width + advanceWidth < maxWidth))
                         {
                             charFit = i;
@@ -140,7 +140,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
             if (!handled)
             {
-                var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, Brushes.Red);
+                var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, Brushes.Red)
+                {
+                    MaxTextWidth = maxWidth
+                };
                 charFit = str.Length;
                 charFitWidth = formattedText.WidthIncludingTrailingWhitespace;
             }
@@ -150,45 +153,9 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         {
             var colorConv = ((BrushAdapter)_adapter.GetSolidBrush(color)).Brush;
 
-            bool glyphRendered = false;
-            IGlyphTypeface glyphTypeface = ((FontAdapter)font).GlyphTypeface;
-            if (glyphTypeface != null)
-            {
-                double width = 0;
-                ushort[] glyphs = new ushort[str.Length];
-                double[] widths = new double[str.Length];
-
-                int i = 0;
-                for (; i < str.Length; i++)
-                {
-                    if (!glyphTypeface.TryGetGlyph(str[i], out var glyph))
-                        break;
-                    if (!glyphTypeface.TryGetGlyphMetrics(str[i], out var glyphMetrics))
-                        break;
-
-                    glyphs[i] = glyph;
-                    width += glyphMetrics.Width;
-                    widths[i] = 96d / 72d * font.Size * glyphMetrics.Width;
-                }
-
-                if (i >= str.Length)
-                {
-                    point.Y += glyphTypeface.Metrics.Ascent * font.Size * 96d / 72d;
-                    point.X += rtl ? 96d / 72d * font.Size * width : 0;
-
-                    glyphRendered = true;
-                    var glyphRun = new GlyphRun(glyphTypeface, 96d / 72d * font.Size, str.AsMemory(), glyphs,
-                        Utils.ConvertRound(point), rtl ? 1 : 0);
-                    _g.DrawGlyphRun(colorConv, glyphRun);
-                }
-            }
-
-            if (!glyphRendered)
-            {
-                var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, rtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, colorConv);
-                point.X += rtl ? formattedText.Width : 0;
-                _g.DrawText(formattedText, Utils.ConvertRound(point));
-            }
+            var formattedText = new FormattedText(str, CultureInfo.CurrentCulture, rtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight, ((FontAdapter)font).Font, 96d / 72d * font.Size, colorConv);
+            point.X += rtl ? formattedText.Width : 0;
+            _g.DrawText(formattedText, Utils.ConvertRound(point));
         }
 
         public override RBrush GetTextureBrush(RImage image, RRect dstRect, RPoint translateTransformLocation)

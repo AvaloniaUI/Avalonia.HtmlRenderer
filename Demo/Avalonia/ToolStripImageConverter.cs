@@ -12,7 +12,9 @@
 
 using System;
 using System.Globalization;
+using Avalonia;
 using Avalonia.Data.Converters;
+using Avalonia.Platform;
 using TheArtOfDev.HtmlRenderer.Demo.Common;
 
 namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia

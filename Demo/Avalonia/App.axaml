@@ -3,6 +3,6 @@
              x:Class="HtmlRenderer.Demo.Avalonia2.App"
              RequestedThemeVariant="Light">
     <Application.Styles>
-        <FluentTheme />
+        <SimpleTheme />
     </Application.Styles>
 </Application>

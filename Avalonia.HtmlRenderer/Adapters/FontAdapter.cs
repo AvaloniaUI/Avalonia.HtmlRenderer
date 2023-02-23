@@ -63,8 +63,9 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             _font = font;
             _size = size;
             _glyphTypeface = FontManager.Current.GetOrAddGlyphTypeface(font);
-            _height = 96d / 72d * _size * _glyphTypeface.Metrics.LineSpacing;
-            _underlineOffset = 96d / 72d * _size * (_glyphTypeface.Metrics.LineSpacing + _glyphTypeface.Metrics.UnderlinePosition);
+            var emHeight = _glyphTypeface.Metrics.DesignEmHeight;
+            _height = 96d / 72d * (_size / emHeight) * _glyphTypeface.Metrics.LineSpacing;
+            _underlineOffset = 96d / 72d * (_size / emHeight) * (_glyphTypeface.Metrics.LineSpacing + _glyphTypeface.Metrics.UnderlinePosition);
         }
 
         /// <summary>

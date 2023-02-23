@@ -14,6 +14,7 @@ using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Utils;
 using Point = Avalonia.Point;
@@ -46,6 +47,11 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
 
         #endregion
 
+        static HtmlPanel()
+        {
+            BackgroundProperty.OverrideDefaultValue<HtmlPanel>(Brushes.Transparent);
+        }
+        
         /// <summary>
         /// Creates a new HtmlPanel and sets a basic css for it's styling.
         /// </summary>
@@ -198,7 +204,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             base.OnPointerWheelChanged(e);
             if (_verticalScrollBar.Visibility == ScrollBarVisibility.Visible)
             {
-                _verticalScrollBar.Value -= e.Delta.X;
+                _verticalScrollBar.Value -= (e.Delta.Y * 20);
                 UpdateScrollOffsets();
                 e.Handled = true;
             }

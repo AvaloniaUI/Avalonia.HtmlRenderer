@@ -42,6 +42,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
             SamplesLoader.Init("Avalonia", typeof(HtmlRender).Assembly.GetName().Version.ToString());
 
             InitializeComponent();
+            DataContext = this;
 
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
@@ -76,7 +77,14 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         {
             var tmpFile = Path.ChangeExtension(Path.GetTempFileName(), ".htm");
             File.WriteAllText(tmpFile, _mainControl.GetHtml());
-            Process.Start(tmpFile);
+            
+            new Process
+            {
+                StartInfo = new ProcessStartInfo(tmpFile)
+                {
+                    UseShellExecute = true
+                }
+            }.Start();
         }
 
         /// <summary>

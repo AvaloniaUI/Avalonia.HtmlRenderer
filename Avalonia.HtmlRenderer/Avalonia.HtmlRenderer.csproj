@@ -8,7 +8,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Version>11.0.0-preview5</Version>
-    <Copyright>Copyright 2022 &#169; The AvaloniaUI Project</Copyright>
+    <Copyright>Copyright 2022 © The AvaloniaUI Project</Copyright>
     <PackageProjectUrl>https://avaloniaui.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AvaloniaUI/Avalonia.HtmlRenderer/</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -37,9 +37,6 @@
     <Compile Include="Adapters\ImageAdapter.cs" />
     <Compile Include="Adapters\PenAdapter.cs" />
     <Compile Include="Adapters\AvaloniaAdapter.cs" />
-    <Compile Include="Compat\Api.cs" />
-    <Compile Include="Compat\Attributes.cs" />
-    <Compile Include="Compat\ThreadPool.cs" />
     <Compile Include="external\Source\HtmlRenderer\Adapters\Entities\RColor.cs" />
     <Compile Include="external\Source\HtmlRenderer\Adapters\Entities\RDashStyle.cs" />
     <Compile Include="external\Source\HtmlRenderer\Adapters\Entities\RFontStyle.cs" />
@@ -125,6 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.0-preview5" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 </Project>

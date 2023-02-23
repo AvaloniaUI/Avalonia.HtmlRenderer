@@ -560,7 +560,8 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         private void OnRefresh(object sender, HtmlRefreshEventArgs e)
         {
             if (CheckAccess())
-                OnRefresh(e);
+                // Visual invalidation should always go on the dispatcher.
+                Dispatcher.UIThread.InvokeAsync(() => OnRefresh(e));
             else
                 Dispatcher.UIThread.InvokeAsync(() => OnRefresh(e)).Wait();
         }

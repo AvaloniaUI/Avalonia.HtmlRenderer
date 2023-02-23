@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Avalonia.Controls;
@@ -175,7 +176,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// </summary>
         private void OnTreeView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = ((TreeViewItem)((TreeView)sender).SelectedItem);
+            var item = e.AddedItems.OfType<TreeViewItem>().FirstOrDefault();
             var sample = item?.Tag as HtmlSample;
             if (sample != null)
             {
