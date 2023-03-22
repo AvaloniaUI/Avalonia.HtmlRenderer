@@ -129,7 +129,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         {
             var showcaseRoot = new TreeViewItem();
             showcaseRoot.Header = "HTML Renderer";
-            ((IList<object>)_samplesTreeView.Items!).Add(showcaseRoot);
+            ((ItemCollection)_samplesTreeView.Items!).Add(showcaseRoot);
 
             foreach (var sample in SamplesLoader.ShowcaseSamples)
             {
@@ -138,7 +138,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
 
             var testSamplesRoot = new TreeViewItem();
             testSamplesRoot.Header = "Test Samples";
-            ((IList<object>)_samplesTreeView.Items!).Add(testSamplesRoot);
+            ((ItemCollection)_samplesTreeView.Items!).Add(testSamplesRoot);
 
             foreach (var sample in SamplesLoader.TestSamples)
             {
@@ -149,7 +149,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
             {
                 var perfTestSamplesRoot = new TreeViewItem();
                 perfTestSamplesRoot.Header = PerformanceSamplesTreeNodeName;
-                ((IList<object>)_samplesTreeView.Items!).Add(perfTestSamplesRoot);
+                ((ItemCollection)_samplesTreeView.Items!).Add(perfTestSamplesRoot);
 
                 foreach (var sample in SamplesLoader.PerformanceSamples)
                 {
@@ -159,8 +159,8 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
 
             showcaseRoot.IsExpanded = true;
             
-            if (((IList<object>)showcaseRoot.Items!).Count > 0)
-                ((TreeViewItem)((IList<object>)showcaseRoot.Items!)[0]).IsSelected = true;
+            if (((ItemCollection)showcaseRoot.Items!).Count > 0)
+                ((TreeViewItem)((ItemCollection)showcaseRoot.Items!)[0]).IsSelected = true;
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
             var node = new TreeViewItem();
             node.Header = sample.Name;
             node.Tag = new HtmlSample(sample.Name, sample.FullName, html);
-            ((IList<object>)root.Items!).Add(node);
+            ((ItemCollection)root.Items!).Add(node);
         }
 
         /// <summary>

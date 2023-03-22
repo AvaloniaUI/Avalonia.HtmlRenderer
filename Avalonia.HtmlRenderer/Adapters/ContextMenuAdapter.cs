@@ -42,7 +42,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             _contextMenu = new MenuFlyout();
         }
 
-        private IList<object> Items => ((IList<object>)_contextMenu.Items);
+        private ItemCollection Items => ((ItemCollection)_contextMenu.Items);
         
         public override int ItemsCount
         {
