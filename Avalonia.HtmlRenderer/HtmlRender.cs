@@ -223,10 +223,9 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             if (!string.IsNullOrEmpty(html))
             {
                 // render HTML into the visual
-                using (var context = renderTarget.CreateDrawingContext(null))
-                using (var g = new DrawingContext(context))
+                using (var context = renderTarget.CreateDrawingContext())
                 {
-                    RenderHtml(g, html, new Point(), size, cssData, stylesheetLoad, imageLoad);
+                    RenderHtml(context, html, new Point(), size, cssData, stylesheetLoad, imageLoad);
                 }
             }
 
@@ -301,10 +300,9 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
                     renderTarget = new RenderTargetBitmap(new PixelSize((int)finalSize.Width, (int)finalSize.Height), new Vector(96, 96));
 
                     // render HTML into the visual
-                    using (var contextImpl = renderTarget.CreateDrawingContext(null))
-                    using (var g = new DrawingContext(contextImpl))
+                    using (var context = renderTarget.CreateDrawingContext())
                     {
-                        container.PerformPaint(g, new Rect(new Size(maxSize.Width > 0 ? maxSize.Width : double.MaxValue, maxSize.Height > 0 ? maxSize.Height : double.MaxValue)));
+                        container.PerformPaint(context, new Rect(new Size(maxSize.Width > 0 ? maxSize.Width : double.MaxValue, maxSize.Height > 0 ? maxSize.Height : double.MaxValue)));
                     }
                 }
             }
