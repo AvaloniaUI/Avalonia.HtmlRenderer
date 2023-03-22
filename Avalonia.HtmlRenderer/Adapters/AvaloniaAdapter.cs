@@ -51,7 +51,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             AddFontFamilyMapping("monospace", "Courier New");
             AddFontFamilyMapping("Helvetica", "Arial");
 
-            foreach (var family in FontManager.Current.GetInstalledFontFamilyNames())
+            foreach (var family in FontManager.Current.SystemFonts)
             {
 	            try
 	            {
