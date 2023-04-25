@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net7.0</TargetFrameworks>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <EnableDefaultItems>False</EnableDefaultItems>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
@@ -121,7 +121,6 @@
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.0-preview6" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Avalonia" Version="11.0.0-preview7" />
   </ItemGroup>
 </Project>

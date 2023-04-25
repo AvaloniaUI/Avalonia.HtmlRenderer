@@ -131,12 +131,14 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         protected override void SetToClipboardInt(string text)
         {
-            _ = Application.Current?.Clipboard?.SetTextAsync(text);
+            // panda: commented
+            //_ = Application.Current?.Clipboard?.SetTextAsync(text);
         }
 
         protected override void SetToClipboardInt(string html, string plainText)
         {
-            _ = Application.Current?.Clipboard?.SetTextAsync(plainText);
+            // panda: commented
+            //_ = Application.Current?.Clipboard?.SetTextAsync(plainText);
         }
 
         protected override void SetToClipboardInt(RImage image)
