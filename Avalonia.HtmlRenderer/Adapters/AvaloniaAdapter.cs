@@ -131,12 +131,14 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         protected override void SetToClipboardInt(string text)
         {
-            _ = Application.Current?.Clipboard?.SetTextAsync(text);
+            var topLevel = TryGetTopLevel();
+            _ = topLevel?.Clipboard?.SetTextAsync(text);
         }
 
         protected override void SetToClipboardInt(string html, string plainText)
         {
-            _ = Application.Current?.Clipboard?.SetTextAsync(plainText);
+            var topLevel = TryGetTopLevel();
+            _ = topLevel?.Clipboard?.SetTextAsync(plainText);
         }
 
         protected override void SetToClipboardInt(RImage image)
@@ -152,8 +154,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         protected override async void SaveToFileInt(RImage image, string name, string extension, RControl control = null)
         {
-            var topLevel = TopLevel.GetTopLevel(((ControlAdapter)control)?.Control)
-                ?? (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+            var topLevel = TryGetTopLevel(control);
 
             if (topLevel is null)
             {
@@ -228,6 +229,14 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             return FontWeight.Normal;
         }
 
+        // TODO pass actual top level reference to the adapter or clipboard APIs, might require changing in the HtmlRenderer code.
+        private static TopLevel TryGetTopLevel(RControl control = null)
+        {
+            return TopLevel.GetTopLevel(((ControlAdapter)control)?.Control)
+                   ?? (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow
+                   ?? TopLevel.GetTopLevel((Application.Current?.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView);
+        }
+        
         #endregion
     }
 }

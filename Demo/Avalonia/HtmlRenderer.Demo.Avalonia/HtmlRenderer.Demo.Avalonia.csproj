@@ -10,7 +10,7 @@
     <AvaloniaResource Include="fonts\CustomFont.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.0-preview6" />
-    <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.0-preview6" />
+    <PackageReference Include="Avalonia" Version="11.0.0-preview7" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.0-preview7" />
   </ItemGroup>
 </Project>
