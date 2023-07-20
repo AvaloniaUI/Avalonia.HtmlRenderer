@@ -56,7 +56,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// </summary>
         public StreamGeometry GetClosedGeometry()
         {
-            _geometryContext.EndFigure(true);
+            _geometryContext.EndFigure(false);
             _geometryContext.Dispose();
             return _geometry;
         }
