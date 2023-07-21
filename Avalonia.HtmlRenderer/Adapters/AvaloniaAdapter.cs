@@ -41,7 +41,22 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// </summary>
         private static readonly AvaloniaAdapter _instance = new AvaloniaAdapter();
 
+        /// <summary>
+        /// List of valid predefined color names in lower-case
+        /// </summary>
+        private static readonly List<string> ValidColorNamesLc;
+
         #endregion
+
+        static AvaloniaAdapter()
+        {
+            ValidColorNamesLc = new List<string>();
+            var colorList = new List<PropertyInfo>(typeof(Colors).GetProperties());
+            foreach (var colorProp in colorList)
+            {
+                ValidColorNamesLc.Add(colorProp.Name.ToLower());
+            }
+        }
 
         /// <summary>
         /// Init installed font families and set default font families mapping.
@@ -73,6 +88,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         protected override RColor GetColorInt(string colorName)
         {
+            // check if color name is valid to avoid ColorConverter throwing an exception
+            if (!ValidColorNamesLc.Contains(colorName.ToLower()))
+                return RColor.Empty;
+
             return Utils.Convert(Color.TryParse(colorName, out var color) ? color : Colors.Black);
         }
 
