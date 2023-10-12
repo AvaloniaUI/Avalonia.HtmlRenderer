@@ -25,7 +25,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="../HtmlRenderer/**/*.cs" Link="External/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../HtmlRenderer/Core/**/*.cs" Link="External/Core/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../HtmlRenderer/Adapters/**/*.cs" Link="External/Adapters/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.0" />
