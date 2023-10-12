@@ -84,7 +84,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         {
             if (_htmlContainer != null)
             {
-                using (var ig = new GraphicsAdapter())
+                using (var ig = new GraphicsAdapter(Container.AvaloniaAdapter))
                 {
                     var horizontal = Padding.Left + Padding.Right + BorderThickness.Left + BorderThickness.Right;
                     var vertical = Padding.Top + Padding.Bottom + BorderThickness.Top + BorderThickness.Bottom;

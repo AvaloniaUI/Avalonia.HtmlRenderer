@@ -126,7 +126,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// </summary>
         public HtmlControl()
         {
-            _htmlContainer = new HtmlContainer();
+            _htmlContainer = new HtmlContainer(this);
             _htmlContainer.LoadComplete += OnLoadComplete;
             _htmlContainer.LinkClicked += OnLinkClicked;
             _htmlContainer.RenderError += OnRenderError;
@@ -322,6 +322,11 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         }
 
         /// <summary>
+        /// Gets inner html container of this control.
+        /// </summary>
+        public HtmlContainer Container => _htmlContainer;
+
+        /// <summary>
         /// Get html from the current DOM tree with inline style.
         /// </summary>
         /// <returns>generated html</returns>
@@ -350,7 +355,6 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             if (_htmlContainer != null)
                 _htmlContainer.ClearSelection();
         }
-
 
         #region Private methods
 

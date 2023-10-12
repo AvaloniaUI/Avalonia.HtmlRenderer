@@ -39,17 +39,22 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// </summary>
         private readonly HtmlContainerInt _htmlContainerInt;
 
+        private readonly AvaloniaAdapter _avaloniaAdapter;
+
         #endregion
 
 
         /// <summary>
         /// Init.
         /// </summary>
-        public HtmlContainer()
+        public HtmlContainer(Control hostControl)
         {
-            _htmlContainerInt = new HtmlContainerInt(AvaloniaAdapter.Instance);
+            _avaloniaAdapter = new AvaloniaAdapter(hostControl);
+            _htmlContainerInt = new HtmlContainerInt(_avaloniaAdapter);
             _htmlContainerInt.PageSize = new RSize(99999, 99999);
         }
+
+        internal AvaloniaAdapter AvaloniaAdapter => _avaloniaAdapter;
 
         /// <summary>
         /// Raised when the set html document has been fully loaded.<br/>
@@ -348,7 +353,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// </summary>
         public void PerformLayout()
         {
-            using (var ig = new GraphicsAdapter())
+            using (var ig = new GraphicsAdapter(_avaloniaAdapter))
             {
                 _htmlContainerInt.PerformLayout(ig);
             }
@@ -363,7 +368,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            using (var ig = new GraphicsAdapter(g, Utils.Convert(clip)))
+            using (var ig = new GraphicsAdapter(_avaloniaAdapter, g, Utils.Convert(clip)))
             {
                 _htmlContainerInt.PerformPaint(ig);
             }
@@ -379,7 +384,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             ArgChecker.AssertArgNotNull(parent, "parent");
             ArgChecker.AssertArgNotNull(e, "e");
             
-            _htmlContainerInt.HandleMouseDown(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)));
+            _htmlContainerInt.HandleMouseDown(new ControlAdapter(_avaloniaAdapter, parent), Utils.Convert(e.GetPosition(parent)));
         }
 
         /// <summary>
@@ -393,7 +398,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             ArgChecker.AssertArgNotNull(e, "e");
 
             var mouseEvent = new RMouseEvent(true);
-            _htmlContainerInt.HandleMouseUp(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)), mouseEvent);
+            _htmlContainerInt.HandleMouseUp(new ControlAdapter(_avaloniaAdapter, parent), Utils.Convert(e.GetPosition(parent)), mouseEvent);
         }
 
         /// <summary>
@@ -406,7 +411,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             ArgChecker.AssertArgNotNull(parent, "parent");
             ArgChecker.AssertArgNotNull(e, "e");
 
-            _htmlContainerInt.HandleMouseDoubleClick(new ControlAdapter(parent), Utils.Convert(e.GetPosition(parent)));
+            _htmlContainerInt.HandleMouseDoubleClick(new ControlAdapter(_avaloniaAdapter, parent), Utils.Convert(e.GetPosition(parent)));
         }
 
         /// <summary>
@@ -418,7 +423,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         {
             ArgChecker.AssertArgNotNull(parent, "parent");
 
-            _htmlContainerInt.HandleMouseMove(new ControlAdapter(parent), Utils.Convert(mousePos));
+            _htmlContainerInt.HandleMouseMove(new ControlAdapter(_avaloniaAdapter, parent), Utils.Convert(mousePos));
         }
 
         /// <summary>
@@ -429,7 +434,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         {
             ArgChecker.AssertArgNotNull(parent, "parent");
 
-            _htmlContainerInt.HandleMouseLeave(new ControlAdapter(parent));
+            _htmlContainerInt.HandleMouseLeave(new ControlAdapter(_avaloniaAdapter, parent));
         }
 
         /// <summary>
@@ -442,7 +447,36 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             ArgChecker.AssertArgNotNull(parent, "parent");
             ArgChecker.AssertArgNotNull(e, "e");
 
-            _htmlContainerInt.HandleKeyDown(new ControlAdapter(parent), CreateKeyEevent(e));
+            _htmlContainerInt.HandleKeyDown(new ControlAdapter(_avaloniaAdapter, parent), CreateKeyEevent(e));
+        }
+
+        /// <summary>
+        /// Adds a font family to be used in html rendering.<br/>
+        /// The added font will be used by all rendering function including <see cref="HtmlContainer"/> and all Avalonia controls.
+        /// </summary>
+        /// <remarks>
+        /// The given font family instance must be remain alive while the renderer is in use.<br/>
+        /// If loaded from file then the file must not be deleted.
+        /// </remarks>
+        /// <param name="fontFamily">The font family to add.</param>
+        public void AddFontFamily(FontFamily fontFamily)
+        {
+            _avaloniaAdapter.AddFontFamily(new FontFamilyAdapter(fontFamily));
+        }
+
+        /// <summary>
+        /// Adds a font mapping from <paramref name="fromFamily"/> to <paramref name="toFamily"/> iff the <paramref name="fromFamily"/> is not found.<br/>
+        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing 
+        /// fonts (installed or added) it will be replaced by <paramref name="toFamily"/>.<br/>
+        /// </summary>
+        /// <remarks>
+        /// This fonts mapping can be used as a fallback in case the requested font is not installed in the client system.
+        /// </remarks>
+        /// <param name="fromFamily">the font family to replace</param>
+        /// <param name="toFamily">the font family to replace with</param>
+        public void AddFontFamilyMapping(string fromFamily, string toFamily)
+        {
+            _avaloniaAdapter.AddFontFamilyMapping(fromFamily, toFamily);
         }
 
         /// <summary>

@@ -62,11 +62,12 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         public MainControl()
         {
             SamplesLoader.Init("Avalonia", typeof(HtmlRender).Assembly.GetName().Version.ToString());
-            HtmlRender.AddFontFamily(new FontFamily(
-                new Uri("avares://HtmlRenderer.Demo.Avalonia/fonts/CustomFont.ttf"),
-                "1 Smoothy DNA"));
 
             InitializeComponent();
+
+            _htmlPanel.Container.AddFontFamily(new FontFamily(
+                new Uri("avares://HtmlRenderer.Demo.Avalonia/fonts/CustomFont.ttf"),
+                "1 Smoothy DNA"));
 
             _htmlPanel.RenderError += OnRenderError;
             _htmlPanel.LinkClicked += OnLinkClicked;

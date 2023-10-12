@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Media.TextFormatting;
@@ -49,11 +50,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// Init.
         /// </summary>
+        /// <param name="adapter">Avalonia adapter.</param>
         /// <param name="g">the Avalonia graphics object to use</param>
         /// <param name="initialClip">the initial clip of the graphics</param>
         /// <param name="releaseGraphics">optional: if to release the graphics object on dispose (default - false)</param>
-        public GraphicsAdapter(DrawingContext g, RRect initialClip, bool releaseGraphics = false)
-            : base(AvaloniaAdapter.Instance, initialClip)
+        public GraphicsAdapter(AvaloniaAdapter adapter, DrawingContext g, RRect initialClip, bool releaseGraphics = false)
+            : base(adapter, initialClip)
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
@@ -64,8 +66,8 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// Init.
         /// </summary>
-        public GraphicsAdapter()
-            : base(AvaloniaAdapter.Instance, RRect.Empty)
+        public GraphicsAdapter(AvaloniaAdapter adapter)
+            : base(adapter, RRect.Empty)
         {
             _g = null;
             _releaseGraphics = false;

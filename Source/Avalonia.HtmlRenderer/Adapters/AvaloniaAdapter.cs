@@ -34,19 +34,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
     /// </summary>
     internal sealed class AvaloniaAdapter : RAdapter
     {
-        #region Fields and Consts
+        private readonly Control _hostControl;
 
-        /// <summary>
-        /// Singleton instance of global adapter.
-        /// </summary>
-        private static readonly AvaloniaAdapter _instance = new AvaloniaAdapter();
-
-        /// <summary>
-        /// List of valid predefined color names in lower-case
-        /// </summary>
         private static readonly List<string> ValidColorNamesLc;
-
-        #endregion
+        private static readonly List<FontFamily> SystemFontNames;
 
         static AvaloniaAdapter()
         {
@@ -56,34 +47,23 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             {
                 ValidColorNamesLc.Add(colorProp.Name.ToLower());
             }
+
+            SystemFontNames = new List<FontFamily>(FontManager.Current.SystemFonts);
         }
 
         /// <summary>
         /// Init installed font families and set default font families mapping.
         /// </summary>
-        private AvaloniaAdapter()
+        public AvaloniaAdapter(Control hostControl)
         {
+            _hostControl = hostControl;
             AddFontFamilyMapping("monospace", "Courier New");
             AddFontFamilyMapping("Helvetica", "Arial");
 
-            foreach (var family in FontManager.Current.SystemFonts)
+            foreach (var family in SystemFontNames)
             {
-	            try
-	            {
-	                AddFontFamily(new FontFamilyAdapter(family));
-	            }
-	            catch
-	            {
-	            }
+                AddFontFamily(new FontFamilyAdapter(family));
             }
-        }
-
-        /// <summary>
-        /// Singleton instance of global adapter.
-        /// </summary>
-        public static AvaloniaAdapter Instance
-        {
-            get { return _instance; }
         }
 
         protected override RColor GetColorInt(string colorName)
@@ -248,10 +228,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             return FontWeight.Normal;
         }
 
-        // TODO pass actual top level reference to the adapter or clipboard APIs, might require changing in the HtmlRenderer code.
-        private static TopLevel TryGetTopLevel(RControl control = null)
+        private TopLevel TryGetTopLevel(RControl control = null)
         {
             return TopLevel.GetTopLevel(((ControlAdapter)control)?.Control)
+                   ?? TopLevel.GetTopLevel(_hostControl)
                    ?? (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow
                    ?? TopLevel.GetTopLevel((Application.Current?.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView);
         }

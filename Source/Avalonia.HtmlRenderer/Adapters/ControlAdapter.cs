@@ -24,6 +24,8 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
     /// </summary>
     internal sealed class ControlAdapter : RControl
     {
+        private readonly AvaloniaAdapter _avaloniaAdapter;
+
         /// <summary>
         /// the underline Avalonia control.
         /// </summary>
@@ -32,11 +34,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// Init.
         /// </summary>
-        public ControlAdapter(Control control)
-            : base(AvaloniaAdapter.Instance)
+        public ControlAdapter(AvaloniaAdapter avaloniaAdapter, Control control)
+            : base(avaloniaAdapter)
         {
             ArgChecker.AssertArgNotNull(control, "control");
 
+            _avaloniaAdapter = avaloniaAdapter;
             _control = control;
         }
 
@@ -89,7 +92,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
         {
-            using (var g = new GraphicsAdapter())
+            using (var g = new GraphicsAdapter(_avaloniaAdapter))
             {
                 g.MeasureString(str, font, maxWidth, out charFit, out charFitWidth);
             }

@@ -76,40 +76,6 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
     public static class HtmlRender
     {
         /// <summary>
-        /// Adds a font family to be used in html rendering.<br/>
-        /// The added font will be used by all rendering function including <see cref="HtmlContainer"/> and all Avalonia controls.
-        /// </summary>
-        /// <remarks>
-        /// The given font family instance must be remain alive while the renderer is in use.<br/>
-        /// If loaded from file then the file must not be deleted.
-        /// </remarks>
-        /// <param name="fontFamily">The font family to add.</param>
-        public static void AddFontFamily(FontFamily fontFamily)
-        {
-            ArgChecker.AssertArgNotNull(fontFamily, "fontFamily");
-
-            AvaloniaAdapter.Instance.AddFontFamily(new FontFamilyAdapter(fontFamily));
-        }
-
-        /// <summary>
-        /// Adds a font mapping from <paramref name="fromFamily"/> to <paramref name="toFamily"/> iff the <paramref name="fromFamily"/> is not found.<br/>
-        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing 
-        /// fonts (installed or added) it will be replaced by <paramref name="toFamily"/>.<br/>
-        /// </summary>
-        /// <remarks>
-        /// This fonts mapping can be used as a fallback in case the requested font is not installed in the client system.
-        /// </remarks>
-        /// <param name="fromFamily">the font family to replace</param>
-        /// <param name="toFamily">the font family to replace with</param>
-        public static void AddFontFamilyMapping(string fromFamily, string toFamily)
-        {
-            ArgChecker.AssertArgNotNullOrEmpty(fromFamily, "fromFamily");
-            ArgChecker.AssertArgNotNullOrEmpty(toFamily, "toFamily");
-
-            AvaloniaAdapter.Instance.AddFontFamilyMapping(fromFamily, toFamily);
-        }
-
-        /// <summary>
         /// Parse the given stylesheet to <see cref="CssData"/> object.<br/>
         /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the 
         /// default css data (as defined by W3), merged if class name already exists. If false only the data in the given stylesheet is returned.
@@ -120,7 +86,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// <returns>the parsed css data</returns>
         public static CssData ParseStyleSheet(string stylesheet, bool combineWithDefault = true)
         {
-            return CssData.Parse(AvaloniaAdapter.Instance, stylesheet, combineWithDefault);
+            return CssData.Parse(new AvaloniaAdapter(null), stylesheet, combineWithDefault);
         }
 
         /// <summary>
@@ -140,7 +106,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             Size actualSize = default;
             if (!string.IsNullOrEmpty(html))
             {
-                using (var container = new HtmlContainer())
+                using (var container = new HtmlContainer(null))
                 {
                     container.MaxSize = new Size(maxWidth, 0);
                     container.AvoidAsyncImagesLoading = true;
@@ -283,7 +249,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             RenderTargetBitmap renderTarget;
             if (!string.IsNullOrEmpty(html))
             {
-                using (var container = new HtmlContainer())
+                using (var container = new HtmlContainer(null))
                 {
                     container.AvoidAsyncImagesLoading = true;
                     container.AvoidImagesLateLoading = true;
@@ -327,7 +293,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         private static Size MeasureHtmlByRestrictions(HtmlContainer htmlContainer, Size minSize, Size maxSize)
         {
             // use desktop created graphics to measure the HTML
-            using (var mg = new GraphicsAdapter())
+            using (var mg = new GraphicsAdapter(htmlContainer.AvaloniaAdapter))
             {
                 var sizeInt = HtmlRendererUtils.MeasureHtmlByRestrictions(mg, htmlContainer.HtmlContainerInt, Utils.Convert(minSize), Utils.Convert(maxSize));
                 if (maxSize.Width < 1 && sizeInt.Width > 4096)
@@ -389,7 +355,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
 
             if (!string.IsNullOrEmpty(html))
             {
-                using (var container = new HtmlContainer())
+                using (var container = new HtmlContainer(null))
                 {
                     container.Location = location;
                     container.MaxSize = maxSize;
