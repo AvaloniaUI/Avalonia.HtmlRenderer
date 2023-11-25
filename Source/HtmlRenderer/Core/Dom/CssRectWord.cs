@@ -10,6 +10,9 @@
 // - Sun Tsu,
 // "The Art of War"
 
+using System;
+using TheArtOfDev.HtmlRenderer.Adapters;
+
 namespace TheArtOfDev.HtmlRenderer.Core.Dom
 {
     /// <summary>
@@ -22,7 +25,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// The word text
         /// </summary>
-        private readonly string _text;
+        private readonly ReadOnlyMemory<char> _text;
 
         /// <summary>
         /// was there a whitespace before the word chars (before trim)
@@ -44,7 +47,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="text">the word chars </param>
         /// <param name="hasSpaceBefore">was there a whitespace before the word chars (before trim)</param>
         /// <param name="hasSpaceAfter">was there a whitespace after the word chars (before trim)</param>
-        public CssRectWord(CssBox owner, string text, bool hasSpaceBefore, bool hasSpaceAfter)
+        public CssRectWord(CssBox owner, ReadOnlyMemory<char> text, bool hasSpaceBefore, bool hasSpaceAfter)
             : base(owner)
         {
             _text = text;
@@ -76,7 +79,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         {
             get
             {
-                foreach (var c in Text)
+                foreach (var c in Text.Span)
                 {
                     if (!char.IsWhiteSpace(c))
                         return false;
@@ -90,13 +93,13 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public override bool IsLineBreak
         {
-            get { return Text == "\n"; }
+            get { return Text.Length == 1 && Text.Span[0] == '\n'; }
         }
 
         /// <summary>
         /// Gets the text of the word
         /// </summary>
-        public override string Text
+        public override ReadOnlyMemory<char> Text
         {
             get { return _text; }
         }
@@ -107,7 +110,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0} ({1} char{2})", Text.Replace(' ', '-').Replace("\n", "\\n"), Text.Length, Text.Length != 1 ? "s" : string.Empty);
+            return string.Format("{0} ({1} char{2})", AsString.Replace(' ', '-').Replace("\n", "\\n"), Text.Length, Text.Length != 1 ? "s" : string.Empty);
         }
     }
 }

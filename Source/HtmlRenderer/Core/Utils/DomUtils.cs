@@ -502,7 +502,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             }
 
             // empty span box
-            if (box.Boxes.Count < 1 && box.Text != null && box.Text.IsWhitespace())
+            if (box.Boxes.Count < 1 && box.IsSpaces)
             {
                 sb.Append(' ');
             }
@@ -872,15 +872,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         {
             if (selectedText && rect.SelectedStartIndex > -1 && rect.SelectedEndIndexOffset > -1)
             {
-                return rect.Text.Substring(rect.SelectedStartIndex, rect.SelectedEndIndexOffset - rect.SelectedStartIndex);
+                return rect.AsString.Substring(rect.SelectedStartIndex, rect.SelectedEndIndexOffset - rect.SelectedStartIndex);
             }
             else if (selectedText && rect.SelectedStartIndex > -1)
             {
-                return rect.Text.Substring(rect.SelectedStartIndex) + (rect.HasSpaceAfter ? " " : "");
+                return rect.AsString.Substring(rect.SelectedStartIndex) + (rect.HasSpaceAfter ? " " : "");
             }
             else if (selectedText && rect.SelectedEndIndexOffset > -1)
             {
-                return rect.Text.Substring(0, rect.SelectedEndIndexOffset);
+                return rect.AsString.Substring(0, rect.SelectedEndIndexOffset);
             }
             else
             {

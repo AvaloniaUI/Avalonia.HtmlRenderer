@@ -117,7 +117,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 {
                     CloneCssData(ref cssData, ref cssDataChanged);
                     foreach (var child in box.Boxes)
-                        _cssParser.ParseStyleSheet(cssData, child.Text.CutSubstring());
+                        _cssParser.ParseStyleSheet(cssData, child.Text.ToString());
                 }
             }
 
@@ -173,7 +173,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             }
 
             // cascade text decoration only to boxes that actually have text so it will be handled correctly.
-            if (box.TextDecoration != String.Empty && box.Text == null)
+            if (box.TextDecoration != String.Empty && box.Text.IsEmpty)
             {
                 foreach (var childBox in box.Boxes)
                     childBox.TextDecoration = box.TextDecoration;
@@ -573,10 +573,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             for (int i = box.Boxes.Count - 1; i >= 0; i--)
             {
                 var childBox = box.Boxes[i];
-                if (childBox.Text != null)
+                if (!childBox.Text.IsEmpty)
                 {
                     // is the box has text
-                    var keepBox = !childBox.Text.IsEmptyOrWhitespace();
+                    var keepBox = !childBox.IsSpaceOrEmpty;
 
                     // is the box is pre-formatted
                     keepBox = keepBox || childBox.WhiteSpace == CssConstants.Pre || childBox.WhiteSpace == CssConstants.PreWrap;

@@ -331,6 +331,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             return str;
         }
 
+        public static bool IsEmptyOrWhitespace(this ReadOnlySpan<char> span)
+        {
+            for (int i = 0; i < span.Length; i++)
+            {
+                if (!char.IsWhiteSpace(span[i]))
+                    return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Encode regular string into html encoded string.<br/>
         /// Handles &lt;, &gt;, "&amp;.

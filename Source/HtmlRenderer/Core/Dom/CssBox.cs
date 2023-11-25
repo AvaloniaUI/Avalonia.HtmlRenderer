@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Avalonia.Controls.Documents;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
@@ -60,7 +61,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// the inner text of the box
         /// </summary>
-        private SubString _text;
+        private ReadOnlyMemory<char> _text;
 
         /// <summary>
         /// Do not use or alter this flag
@@ -278,7 +279,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// Gets or sets the inner text of the box
         /// </summary>
-        public SubString Text
+        public ReadOnlyMemory<char> Text
         {
             get { return _text; }
             set
@@ -288,6 +289,23 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             }
         }
 
+        /// <summary>
+        /// Gets a bool indicating if this word is composed only by spaces.
+        /// Spaces include tabs and line breaks
+        /// </summary>
+        public bool IsSpaces
+        {
+            get
+            {
+                foreach (var c in Text.Span)
+                {
+                    if (!char.IsWhiteSpace(c))
+                        return false;
+                }
+                return true;
+            }
+        }
+        
         /// <summary>
         /// Gets the line-boxes of this box (if block box)
         /// </summary>
@@ -542,45 +560,46 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             int startIdx = 0;
             bool preserveSpaces = WhiteSpace == CssConstants.Pre || WhiteSpace == CssConstants.PreWrap;
             bool respoctNewline = preserveSpaces || WhiteSpace == CssConstants.PreLine;
-            while (startIdx < _text.Length)
+            var text = _text.Span;
+            while (startIdx < text.Length)
             {
-                while (startIdx < _text.Length && _text[startIdx] == '\r')
+                while (startIdx < text.Length && text[startIdx] == '\r')
                     startIdx++;
 
-                if (startIdx < _text.Length)
+                if (startIdx < text.Length)
                 {
                     var endIdx = startIdx;
-                    while (endIdx < _text.Length && char.IsWhiteSpace(_text[endIdx]) && _text[endIdx] != '\n')
+                    while (endIdx < text.Length && char.IsWhiteSpace(text[endIdx]) && text[endIdx] != '\n')
                         endIdx++;
 
                     if (endIdx > startIdx)
                     {
                         if (preserveSpaces)
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), false, false));
+                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(startIdx, endIdx - startIdx).ToString()).AsMemory(), false, false));
                     }
                     else
                     {
                         endIdx = startIdx;
-                        while (endIdx < _text.Length && !char.IsWhiteSpace(_text[endIdx]) && _text[endIdx] != '-' && WordBreak != CssConstants.BreakAll && !CommonUtils.IsAsianCharecter(_text[endIdx]))
+                        while (endIdx < text.Length && !char.IsWhiteSpace(text[endIdx]) && text[endIdx] != '-' && WordBreak != CssConstants.BreakAll && !CommonUtils.IsAsianCharecter(text[endIdx]))
                             endIdx++;
 
-                        if (endIdx < _text.Length && (_text[endIdx] == '-' || WordBreak == CssConstants.BreakAll || CommonUtils.IsAsianCharecter(_text[endIdx])))
+                        if (endIdx < text.Length && (text[endIdx] == '-' || WordBreak == CssConstants.BreakAll || CommonUtils.IsAsianCharecter(text[endIdx])))
                             endIdx++;
 
                         if (endIdx > startIdx)
                         {
-                            var hasSpaceBefore = !preserveSpaces && (startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(_text[startIdx - 1]));
-                            var hasSpaceAfter = !preserveSpaces && (endIdx < _text.Length && char.IsWhiteSpace(_text[endIdx]));
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), hasSpaceBefore, hasSpaceAfter));
+                            var hasSpaceBefore = !preserveSpaces && (startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[startIdx - 1]));
+                            var hasSpaceAfter = !preserveSpaces && (endIdx < text.Length && char.IsWhiteSpace(text[endIdx]));
+                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(startIdx, endIdx - startIdx).ToString()).AsMemory(), hasSpaceBefore, hasSpaceAfter));
                         }
                     }
 
                     // create new-line word so it will effect the layout
-                    if (endIdx < _text.Length && _text[endIdx] == '\n')
+                    if (endIdx < text.Length && text[endIdx] == '\n')
                     {
                         endIdx++;
                         if (respoctNewline)
-                            _boxWords.Add(new CssRectWord(this, "\n", false, false));
+                            _boxWords.Add(new CssRectWord(this, "\n".AsMemory(), false, false));
                     }
 
                     startIdx = endIdx;
@@ -723,8 +742,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                 {
                     foreach (var boxWord in Words)
                     {
-                        boxWord.Width = boxWord.Text != "\n" ? g.MeasureString(boxWord.Text, ActualFont).Width : 0;
-                        boxWord.Height = ActualFont.Height;
+                        boxWord.Line = g.FormatLine(boxWord.Text, ActualFont);
+                        var size = boxWord.Line.Size;
+                        boxWord.Width = size.Width;
+                        boxWord.Height = size.Height;
                     }
                 }
 
@@ -795,27 +816,27 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
 
                     if (ListStyleType.Equals(CssConstants.Disc, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        _listItemBox.Text = new SubString("•");
+                        _listItemBox.Text = "•".AsMemory();
                     }
                     else if (ListStyleType.Equals(CssConstants.Circle, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        _listItemBox.Text = new SubString("o");
+                        _listItemBox.Text = "o".AsMemory();
                     }
                     else if (ListStyleType.Equals(CssConstants.Square, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        _listItemBox.Text = new SubString("♠");
+                        _listItemBox.Text = "♠".AsMemory();
                     }
                     else if (ListStyleType.Equals(CssConstants.Decimal, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        _listItemBox.Text = new SubString(GetIndexForList().ToString(CultureInfo.InvariantCulture) + ".");
+                        _listItemBox.Text = (GetIndexForList().ToString(CultureInfo.InvariantCulture) + ".").AsMemory();
                     }
                     else if (ListStyleType.Equals(CssConstants.DecimalLeadingZero, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        _listItemBox.Text = new SubString(GetIndexForList().ToString("00", CultureInfo.InvariantCulture) + ".");
+                        _listItemBox.Text = (GetIndexForList().ToString("00", CultureInfo.InvariantCulture) + ".").AsMemory();
                     }
                     else
                     {
-                        _listItemBox.Text = new SubString(CommonUtils.ConvertToAlphaNumber(GetIndexForList(), ListStyleType) + ".");
+                        _listItemBox.Text = (CommonUtils.ConvertToAlphaNumber(GetIndexForList(), ListStyleType) + ".").AsMemory();
                     }
 
                     _listItemBox.ParseToWords();
@@ -1388,21 +1409,21 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                                 if (HtmlContainer.SelectionForeColor != RColor.Empty && (word.SelectedStartOffset > 0 || word.SelectedEndIndexOffset > -1))
                                 {
                                     g.PushClipExclude(rect);
-                                    g.DrawString(word.Text, ActualFont, ActualColor, wordPoint, new RSize(word.Width, word.Height), isRtl);
+                                    g.DrawFormattedLine(word.Line, ActualColor, wordPoint, new RSize(word.Width, word.Height), isRtl);
                                     g.PopClip();
                                     g.PushClip(rect);
-                                    g.DrawString(word.Text, ActualFont, GetSelectionForeBrush(), wordPoint, new RSize(word.Width, word.Height), isRtl);
+                                    g.DrawFormattedLine(word.Line, GetSelectionForeBrush(), wordPoint, new RSize(word.Width, word.Height), isRtl);
                                     g.PopClip();
                                 }
                                 else
                                 {
-                                    g.DrawString(word.Text, ActualFont, GetSelectionForeBrush(), wordPoint, new RSize(word.Width, word.Height), isRtl);
+                                    g.DrawFormattedLine(word.Line, GetSelectionForeBrush(), wordPoint, new RSize(word.Width, word.Height), isRtl);
                                 }
                             }
                             else
                             {
                                 //                            g.DrawRectangle(HtmlContainer.Adapter.GetPen(RColor.Black), wordPoint.X, wordPoint.Y, word.Width - 1, word.Height - 1);
-                                g.DrawString(word.Text, ActualFont, ActualColor, wordPoint, new RSize(word.Width, word.Height), isRtl);
+                                g.DrawFormattedLine(word.Line, ActualColor, wordPoint, new RSize(word.Width, word.Height), isRtl);
                             }
                         }
                     }

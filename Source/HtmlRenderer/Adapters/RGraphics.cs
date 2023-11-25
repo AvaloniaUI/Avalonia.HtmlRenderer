@@ -167,6 +167,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>graphics path instance</returns>
         public abstract RGraphicsPath GetGraphicsPath();
 
+        public abstract RFormattedLine FormatLine(ReadOnlyMemory<char> span, RFont font);
+        
         /// <summary>
         /// Measure the width and height of string <paramref name="str"/> when drawn on device context HDC
         /// using the given font <paramref name="font"/>.
@@ -198,6 +200,16 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <param name="rtl">is to render the string right-to-left (true - RTL, false - LTR)</param>
         public abstract void DrawString(String str, RFont font, RColor color, RPoint point, RSize size, bool rtl);
 
+        /// <summary>
+        /// Draw the given string using the given font and foreground color at given location.
+        /// </summary>
+        /// <param name="line">the formatted line to draw</param>
+        /// <param name="color">the text color to set</param>
+        /// <param name="point">the location to start string draw (top-left)</param>
+        /// <param name="size">used to know the size of the rendered text for transparent text support</param>
+        /// <param name="rtl">is to render the string right-to-left (true - RTL, false - LTR)</param>
+        public abstract void DrawFormattedLine(RFormattedLine line, RColor color, RPoint point, RSize size, bool rtl);
+        
         /// <summary>
         /// Draws a line connecting the two points specified by the coordinate pairs.
         /// </summary>
