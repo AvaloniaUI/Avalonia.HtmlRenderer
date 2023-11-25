@@ -643,7 +643,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             selectionIndex = 0;
             selectionOffset = 0f;
             var offset = loc.X - word.Left;
-            if (word.Text == null)
+            if (word.Text.IsEmpty)
             {
                 // not a text word - set full selection
                 selectionIndex = -1;
@@ -661,7 +661,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 int charFit;
                 double charFitWidth;
                 var maxWidth = offset + (inclusive ? 0 : 1.5f * word.LeftGlyphPadding);
-                control.MeasureString(word.Text, word.OwnerBox.ActualFont, maxWidth, out charFit, out charFitWidth);
+                control.MeasureString(word.AsString, word.OwnerBox.ActualFont, maxWidth, out charFit, out charFitWidth);
 
                 selectionIndex = charFit;
                 selectionOffset = charFitWidth;

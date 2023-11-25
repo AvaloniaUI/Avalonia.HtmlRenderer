@@ -10,6 +10,7 @@
 // - Sun Tsu,
 // "The Art of War"
 
+using System;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Handlers;
@@ -207,11 +208,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// Gets the text of the word
         /// </summary>
-        public virtual string Text
+        public virtual ReadOnlyMemory<char> Text
         {
-            get { return null; }
+            get { return default; }
         }
 
+        private string _string;
+        public string AsString => _string = _string ?? Text.ToString(); 
+        
+        public RFormattedLine Line { get; set; }
+        
         /// <summary>
         /// is the word is currently selected
         /// </summary>
@@ -266,7 +272,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0} ({1} char{2})", Text.Replace(' ', '-').Replace("\n", "\\n"), Text.Length, Text.Length != 1 ? "s" : string.Empty);
+            return string.Format("{0} ({1} char{2})", AsString?.Replace(' ', '-').Replace("\n", "\\n"), Text.Length, Text.Length != 1 ? "s" : string.Empty);
         }
 
         public bool BreakPage()

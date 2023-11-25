@@ -285,7 +285,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             string[] ws = new string[Words.Count];
             for (int i = 0; i < ws.Length; i++)
             {
-                ws[i] = Words[i].Text;
+                ws[i] = Words[i].AsString;
             }
             return string.Join(" ", ws);
         }

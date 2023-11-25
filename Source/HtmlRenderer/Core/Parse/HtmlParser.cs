@@ -77,8 +77,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             if (endIdx > -1 && endIdx < source.Length)
             {
                 // there is text after the end of last element
-                var endText = new SubString(source, endIdx, source.Length - endIdx);
-                if (!endText.IsEmptyOrWhitespace())
+                var endText = source.AsMemory().Slice(endIdx, source.Length - endIdx);
+                if (!endText.Span.IsEmptyOrWhitespace())
                 {
                     var abox = CssBox.CreateBox(root);
                     abox.Text = endText;
@@ -102,8 +102,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <param name="curBox">the current box in html tree parsing</param>
         private static void AddTextBox(string source, int startIdx, int tagIdx, ref CssBox curBox)
         {
-            var text = tagIdx > startIdx ? new SubString(source, startIdx, tagIdx - startIdx) : null;
-            if (text != null)
+            var text = tagIdx > startIdx ? source.AsMemory().Slice(startIdx, tagIdx - startIdx) : default;
+            if (!text.IsEmpty)
             {
                 var abox = CssBox.CreateBox(curBox);
                 abox.Text = text;

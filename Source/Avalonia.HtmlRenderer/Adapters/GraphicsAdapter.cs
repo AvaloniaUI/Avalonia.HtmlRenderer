@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Media.TextFormatting;
@@ -104,11 +105,40 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         public override void ReturnPreviousSmoothingMode(Object prevMode)
         { }
 
+        public override RFormattedLine FormatLine(ReadOnlyMemory<char> memory, RFont font)
+        {
+            var fontAdapter = (FontAdapter)font;
+            var formattedLine = TextFormatter.Current.FormatLine(
+                new CustomTextSource(memory, fontAdapter.TextRunProperties),
+                0, double.MaxValue, fontAdapter.TextParagraphProperties);
+            return new FormattedLineAdapter(formattedLine);
+        }
+
+        public override void DrawFormattedLine(RFormattedLine line, RColor color, RPoint point, RSize size, bool rtl)
+        {
+            var colorConv = ((BrushAdapter)_adapter.GetSolidBrush(color)).Brush;
+            var lineConv = (FormattedLineAdapter)line;
+
+            point.X += rtl ? lineConv.Size.Width : 0;
+            var (currentX, currentY) = Utils.ConvertRound(point) + new Point(lineConv.TextLine.Start, 0);
+
+            foreach (var run in lineConv.TextLine.TextRuns)
+            {
+                if (run is ShapedTextRun shapedTextRun)
+                {
+                    using (_g.PushTransform(Matrix.CreateTranslation(new Vector(currentX, currentY))))
+                    {
+                        _g.DrawGlyphRun(colorConv, shapedTextRun.GlyphRun);
+                    }
+                }
+            }
+        }
+
         public override RSize MeasureString(string str, RFont font)
         {
             var fontAdapter = (FontAdapter)font;
             var formattedLine = TextFormatter.Current.FormatLine(
-                new CustomTextSource(str, fontAdapter.TextRunProperties),
+                new CustomTextSource(str.AsMemory(), fontAdapter.TextRunProperties),
                 0, double.MaxValue, fontAdapter.TextParagraphProperties);
             
             return new RSize(formattedLine.WidthIncludingTrailingWhitespace, formattedLine.Height);
@@ -118,9 +148,9 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         {
             var fontAdapter = (FontAdapter)font;
             var formattedLine = TextFormatter.Current.FormatLine(
-                new CustomTextSource(str, fontAdapter.TextRunProperties),
+                new CustomTextSource(str.AsMemory(), fontAdapter.TextRunProperties),
                 0, maxWidth, fontAdapter.TextParagraphProperties);
-                
+
             charFit = formattedLine.Length;
             charFitWidth = formattedLine.WidthIncludingTrailingWhitespace;
         }
@@ -238,9 +268,9 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         internal readonly struct CustomTextSource : ITextSource
         {
             private readonly TextRunProperties _defaultProperties;
-            private readonly string _text;
+            private readonly ReadOnlyMemory<char> _text;
 
-            public CustomTextSource(string text, TextRunProperties defaultProperties)
+            public CustomTextSource(ReadOnlyMemory<char> text, TextRunProperties defaultProperties)
             {
                 _text = text;
                 _defaultProperties = defaultProperties;
