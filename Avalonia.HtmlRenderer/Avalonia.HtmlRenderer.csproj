@@ -5,6 +5,7 @@
     <EnableDefaultItems>False</EnableDefaultItems>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <NoWarn>CS0436</NoWarn>
+    <Configurations>Debug;Release;Beta Release</Configurations>
   </PropertyGroup>
   <PropertyGroup>
     <Version>11.0.0-preview6</Version>
