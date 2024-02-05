@@ -18,6 +18,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Metadata;
 using Avalonia.Threading;
 using TheArtOfDev.HtmlRenderer.Core;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
@@ -273,6 +274,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         /// Gets or sets the text of this panel
         /// </summary>
         [Description("Sets the html of this control.")]
+        [Content]
         public string Text
         {
             get { return (string)GetValue(TextProperty); }
