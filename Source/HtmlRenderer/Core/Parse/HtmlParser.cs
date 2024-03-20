@@ -81,7 +81,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 if (!endText.Span.IsEmptyOrWhitespace())
                 {
                     var abox = CssBox.CreateBox(root);
-                    abox.Text = endText;
+                    abox.Text = HtmlUtils.DecodeHtml(endText.ToString()).AsMemory();
                 }
             }
 
@@ -106,7 +106,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             if (!text.IsEmpty)
             {
                 var abox = CssBox.CreateBox(curBox);
-                abox.Text = text;
+                abox.Text = HtmlUtils.DecodeHtml(text.ToString()).AsMemory();
             }
         }
 
