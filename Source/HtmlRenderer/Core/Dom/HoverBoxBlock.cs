@@ -53,5 +53,73 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         {
             get { return _cssBlock; }
         }
+
+        /// <summary>
+        /// Used to determine if :hover is active or not and set in
+        /// </summary>
+        private bool _isHovering;
+
+        /// <summary>
+        /// A lookup of all text element style properties before :hover style is applied and used to restore styling after hover
+        /// </summary>
+        private Dictionary<CssBox, Dictionary<string, string>> _originalBlocks = [];
+
+        /// <summary>
+        /// Toggles hover styling 
+        /// </summary>
+        /// <param name="isHovering">Whether to apply or remove :hover style</param>
+        /// <returns>returns true if state changed</returns>
+        public bool SetIsHovering(bool isHovering)
+        {
+            if (_isHovering == isHovering)
+            {
+                // no change
+                return false;
+            }
+            _isHovering = isHovering;
+
+            if (_isHovering)
+            {
+                // find and cache current child text element styles
+                var textElms = new List<CssBox>();
+                FindTextElements(CssBox, textElms);
+                _originalBlocks.Clear();
+                foreach (var textElm in textElms)
+                {
+                    var props = CssBlock.Properties.ToDictionary(x => x.Key, x => CssUtils.GetPropertyValue(textElm, x.Key));
+                    _originalBlocks.Add(textElm, props);
+                }
+                // assign the :hover style
+                foreach (var textElm in textElms)
+                {
+                    DomParser.AssignCssProps(textElm, CssBlock.Properties);
+                }
+            } else
+            {
+                // restore non :hover styles
+                foreach (var textBlock_kvp in _originalBlocks)
+                {
+                    DomParser.AssignCssProps(textBlock_kvp.Key, textBlock_kvp.Value);
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Helper method that populates <paramref name="textElms"/> with all self and descending TextElements from <paramref name="elm"/>
+        /// </summary>
+        /// <param name="elm">Box to search</param>
+        /// <param name="textElms">A list to add found anon text element boxes</param>
+        private void FindTextElements(CssBox elm, List<CssBox> textElms)
+        {
+            if (elm.HtmlTag == null)
+            {
+                textElms.Add(elm);
+            }
+            foreach (var celm in elm.Boxes)
+            {
+                FindTextElements(celm, textElms);
+            }
+        }
     }
 }
