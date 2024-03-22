@@ -774,26 +774,22 @@ namespace TheArtOfDev.HtmlRenderer.Core
                 if (_selectionHandler != null && IsMouseInContainer(location))
                     _selectionHandler.HandleMouseMove(parent, loc);
 
-                /*
-                if( _hoverBoxes != null )
+                if(_hoverBoxes != null)
                 {
+
                     bool refresh = false;
                     foreach(var hoverBox in _hoverBoxes)
                     {
-                        foreach(var rect in hoverBox.Item1.Rectangles.Values)
+                        bool is_hovering = hoverBox.CssBox.Rectangles.Values.Any(x => x.Contains(loc));
+                        if(hoverBox.SetIsHovering(is_hovering))
                         {
-                            if( rect.Contains(loc) )
-                            {
-                                //hoverBox.Item1.Color = "gold";
-                                refresh = true;
-                            }
+                            refresh = true;
                         }
                     }
 
                     if(refresh)
                         RequestRefresh(true);
                 }
-                 */
             }
             catch (Exception ex)
             {
