@@ -40,6 +40,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             new KeyValuePair<string, string>("&gt;", ">"),
             new KeyValuePair<string, string>("&quot;", "\""),
             new KeyValuePair<string, string>("&amp;", "&"),
+            new KeyValuePair<string, string>("&nbsp;", " "),
+            new KeyValuePair<string, string>("&apos;", "\'")
         };
 
         /// <summary>
