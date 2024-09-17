@@ -11,6 +11,7 @@
 // "The Art of War"
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Dom;
@@ -332,14 +333,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             return true;
         }
 
-        /// <summary>
-        /// Assigns the given css style block properties to the given css box.
-        /// </summary>
-        /// <param name="box">the css box to assign css to</param>
-        /// <param name="block">the css block to assign</param>
-        private static void AssignCssBlock(CssBox box, CssBlock block)
+        internal static void AssignCssProps(CssBox box, IDictionary<string, string> properties)
         {
-            foreach (var prop in block.Properties)
+            foreach (var prop in properties)
             {
                 var value = prop.Value;
                 if (prop.Value == CssConstants.Inherit && box.ParentBox != null)
@@ -351,6 +347,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     CssUtils.SetPropertyValue(box, prop.Key, value);
                 }
             }
+        }
+
+        /// <summary>
+        /// Assigns the given css style block properties to the given css box.
+        /// </summary>
+        /// <param name="box">the css box to assign css to</param>
+        /// <param name="block">the css block to assign</param>
+        private static void AssignCssBlock(CssBox box, CssBlock block)
+        {
+            AssignCssProps(box, block.Properties);
         }
 
         /// <summary>

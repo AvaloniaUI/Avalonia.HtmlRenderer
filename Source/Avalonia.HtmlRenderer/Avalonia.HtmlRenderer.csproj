@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <NoWarn>CS0436</NoWarn>
+	<LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Version>11.0.0</Version>
     <Authors>Avalonia Team</Authors>
-    <Copyright>Copyright 2013-$([System.DateTime]::Now.ToString(`yyyy`)) &#169; The AvaloniaUI Project</Copyright>
+    <Copyright>Copyright 2013-$([System.DateTime]::Now.ToString(`yyyy`)) © The AvaloniaUI Project</Copyright>
     <PackageProjectUrl>https://avaloniaui.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AvaloniaUI/Avalonia.HtmlRenderer/</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -29,7 +30,7 @@
     <Compile Include="../HtmlRenderer/Adapters/**/*.cs" Link="External/Adapters/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Avalonia" Version="11.0.11" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 </Project>
