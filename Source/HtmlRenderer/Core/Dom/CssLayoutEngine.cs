@@ -248,6 +248,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             var localMaxRight = maxRight;
             var localmaxbottom = maxbottom;
 
+            var i = 0;
             foreach (CssBox b in box.Boxes)
             {
                 double leftspacing = (b.Position != CssConstants.Absolute && b.Position != CssConstants.Fixed) ? b.ActualMarginLeft + b.ActualBorderLeftWidth + b.ActualPaddingLeft : 0;
@@ -264,8 +265,21 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                     if (b.WhiteSpace == CssConstants.NoWrap && curx > startx)
                     {
                         var boxRight = curx;
-                        foreach (var word in b.Words)
-                            boxRight += word.FullWidth;
+
+                        void HandleBox(CssBox currBox)
+                        {
+                            foreach (var word in currBox.Words)
+                                boxRight += word.FullWidth;
+                            foreach (var subBox in currBox.Boxes)
+                            {
+                                HandleBox(subBox);
+                            }
+                        }
+
+                        for (int j = i; j < box.Boxes.Count; j++)
+                        {
+                            HandleBox(box.Boxes[j]);
+                        }
                         if (boxRight > limitRight)
                             wrapNoWrapBox = true;
                     }
@@ -327,6 +341,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                 }
 
                 curx += rightspacing;
+                i++;
             }
 
             // handle height setting
