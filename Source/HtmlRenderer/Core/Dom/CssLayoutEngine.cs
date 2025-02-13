@@ -268,12 +268,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
 
                         void HandleBox(CssBox currBox)
                         {
+                            currBox.MeasureWordsSize(g);
                             foreach (var word in currBox.Words)
                                 boxRight += word.FullWidth;
                             foreach (var subBox in currBox.Boxes)
-                            {
                                 HandleBox(subBox);
-                            }
                         }
 
                         for (int j = i; j < box.Boxes.Count; j++)
