@@ -19,6 +19,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.Android", "Demo\Avalonia\HtmlRenderer.Demo.Avalonia.Android\HtmlRenderer.Demo.Avalonia.Android.csproj", "{EE38FD55-C381-4C06-BA49-26E5729D19A6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DEDA2C34-DB08-4B8F-ABD8-326AA87E3054}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		..\html.ico = ..\html.ico
+		..\licence.md = ..\licence.md
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{3DBDAC6D-643D-4F3F-8FB7-A684EF7659F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
