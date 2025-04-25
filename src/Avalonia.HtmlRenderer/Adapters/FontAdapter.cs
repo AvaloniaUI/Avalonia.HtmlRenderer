@@ -10,6 +10,7 @@
 // - Sun Tsu,
 // "The Art of War"
 
+using System;
 using System.Globalization;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
@@ -66,12 +67,17 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             _font = font;
             _size = size;
             FontManager.Current.TryGetGlyphTypeface(font, out _glyphTypeface);
+            if (_glyphTypeface is null)
+                throw new InvalidOperationException("Unable to get glyph typeface for font: " + font);
+
+#pragma warning disable CS0618 // Type or member is obsolete
             var emHeight = _glyphTypeface.Metrics.DesignEmHeight;
             _height = 96d / 72d * (_size / emHeight) * _glyphTypeface.Metrics.LineSpacing;
             _underlineOffset = 96d / 72d * (_size / emHeight) * (_glyphTypeface.Metrics.LineSpacing + _glyphTypeface.Metrics.UnderlinePosition);
 
             TextRunProperties = new GenericTextRunProperties(font, 96d / 72d * size, null, null, null, BaselineAlignment.Baseline, CultureInfo.CurrentCulture);
             TextParagraphProperties = new GenericTextParagraphProperties(TextRunProperties, textWrap: TextWrapping.Wrap);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         internal TextRunProperties TextRunProperties { get; }
