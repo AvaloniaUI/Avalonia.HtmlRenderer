@@ -582,7 +582,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 if (!childBox.Text.IsEmpty)
                 {
                     // is the box has text
-                    var keepBox = !childBox.IsSpaceOrEmpty;
+                    var keepBox = !childBox.Text.Span.IsEmptyOrWhitespace();
 
                     // is the box is pre-formatted
                     keepBox = keepBox || childBox.WhiteSpace == CssConstants.Pre || childBox.WhiteSpace == CssConstants.PreWrap;
