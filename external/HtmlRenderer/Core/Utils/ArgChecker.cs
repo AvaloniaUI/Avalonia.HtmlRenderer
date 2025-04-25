@@ -11,6 +11,7 @@
 // "The Art of War"
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace TheArtOfDev.HtmlRenderer.Core.Utils
@@ -26,13 +27,17 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// <typeparam name="TException">Exception type to throw.</typeparam>
         /// <param name="condition">Condition to assert.</param>
         /// <param name="message">Exception message in-case of assert failure.</param>
-        public static void AssertIsTrue<TException>(bool condition, string message) where TException : Exception, new()
+        public static void AssertIsTrue<
+#if NET6_0_OR_GREATER
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)]
+#endif
+            TException>(bool condition, string message) where TException : Exception, new()
         {
             // Checks whether the condition is false
             if (!condition)
             {
                 // Throwing exception
-                throw (TException)Activator.CreateInstance(typeof(TException), message);
+                throw (TException)Activator.CreateInstance(typeof(TException), message)!;
             }
         }
 
