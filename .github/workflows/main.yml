@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
-        run: dotnet build ./src/Avalonia.HtmlRenderer/Avalonia.HtmlRenderer.csproj
+        run: dotnet build ./src/Avalonia.HtmlRenderer/Avalonia.HtmlRenderer.csproj -c Release
       - name: Pack
         run: dotnet pack ./src/Avalonia.HtmlRenderer/Avalonia.HtmlRenderer.csproj --no-build -o ./artifacts
       - name: Upload Artifacts
