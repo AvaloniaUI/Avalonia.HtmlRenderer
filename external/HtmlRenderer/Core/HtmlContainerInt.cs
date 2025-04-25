@@ -964,9 +964,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
                 }
                 else
                 {
-                    var nfo = new ProcessStartInfo(link.HrefLink);
-                    nfo.UseShellExecute = true;
-                    Process.Start(nfo);
+                    _adapter.OpenLink(link.HrefLink);
                 }
             }
         }

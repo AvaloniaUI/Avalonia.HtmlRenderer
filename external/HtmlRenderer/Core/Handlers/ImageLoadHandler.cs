@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
@@ -284,7 +285,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 if (_htmlContainer.AvoidAsyncImagesLoading)
                     LoadImageFromFile(source.FullName);
                 else
-                    ThreadPool.QueueUserWorkItem(state => LoadImageFromFile(source.FullName));
+                    Task.Run(() => LoadImageFromFile(source.FullName));
             }
             else
             {

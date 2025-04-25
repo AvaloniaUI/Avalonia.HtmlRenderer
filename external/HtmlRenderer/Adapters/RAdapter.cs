@@ -258,6 +258,15 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         }
 
         /// <summary>
+        /// Opens the specified URL in the default web browser.
+        /// </summary>
+        /// <param name="url">The URL to open.</param>
+        public void OpenLink(string url)
+        {
+            OpenLinkInt(url);
+        }
+        
+        /// <summary>
         /// Set the given html and plain text data to clipboard.<br/>
         /// Not relevant for platforms that don't render HTML on UI element.
         /// </summary>
@@ -410,6 +419,15 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// </summary>
         /// <param name="text">the text to set</param>
         protected virtual void SetToClipboardInt(string text)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Opens the specified URL in the default web browser.
+        /// </summary>
+        /// <param name="url">The URL to open.</param>
+        protected virtual void OpenLinkInt(string text)
         {
             throw new NotImplementedException();
         }

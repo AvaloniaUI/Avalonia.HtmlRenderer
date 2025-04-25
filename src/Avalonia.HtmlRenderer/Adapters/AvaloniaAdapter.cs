@@ -134,6 +134,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             _ = topLevel?.Clipboard?.SetTextAsync(text);
         }
 
+        protected override void OpenLinkInt(string link)
+        {
+            var topLevel = TryGetTopLevel();
+            _ = topLevel?.Launcher.LaunchUriAsync(new Uri(link));
+        }
+
         protected override void SetToClipboardInt(string html, string plainText)
         {
             var topLevel = TryGetTopLevel();
