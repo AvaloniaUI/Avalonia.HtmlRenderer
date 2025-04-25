@@ -28,7 +28,7 @@
                 </ToolTip.Tip>
             </av:HtmlPanel>
             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="4" Background="#BFDBFF" />
-            <TextBox x:Name="_htmlEditor" Grid.Row="2" BorderThickness="0" TextChanged="OnHtmlEditor_TextChanged" />
+            <TextBox x:Name="_htmlEditor" Grid.Row="2" AcceptsReturn="True" BorderThickness="0" TextChanged="OnHtmlEditor_TextChanged" />
         </Grid>
     </Grid>
 </UserControl>
