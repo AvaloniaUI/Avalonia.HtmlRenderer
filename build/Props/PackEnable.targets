@@ -21,6 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup Label="PackageIcon">
-    <None Include="$(MSBuildThisFileDirectory)/../../branding/icon.png" Pack="true" Visible="false" PackagePath=""/>
+    <None Include="$(MSBuildThisFileDirectory)/../icon.png" Pack="true" Visible="false" PackagePath=""/>
   </ItemGroup>
 </Project>

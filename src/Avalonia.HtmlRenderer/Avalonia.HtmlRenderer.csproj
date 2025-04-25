@@ -25,4 +25,5 @@
   </ItemGroup>
 
   <Import Project="$(RepositoryPropsRoot)/PackEnable.targets" />
+  <Import Project="$(RepositoryPropsRoot)/SignEnable.targets" />
 </Project>
