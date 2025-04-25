@@ -63,16 +63,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         private static readonly string _saveImage;
 
         /// <summary>
-        /// open video in browser
-        /// </summary>
-        private static readonly string _openVideo;
-
-        /// <summary>
-        /// copy video url to browser
-        /// </summary>
-        private static readonly string _copyVideoUrl;
-
-        /// <summary>
         /// the selection handler linked to the context menu handler
         /// </summary>
         private readonly SelectionHandler _selectionHandler;
@@ -119,8 +109,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Copier l'URL de l'image";
                 _copyImage = "Copier l'image";
                 _saveImage = "Enregistrer l'image sous...";
-                _openVideo = "Ouvrir la vidéo";
-                _copyVideoUrl = "Copier l'URL de l'vidéo";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("de", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -131,8 +119,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Bild-URL kopieren";
                 _copyImage = "Bild kopieren";
                 _saveImage = "Bild speichern unter...";
-                _openVideo = "Video öffnen";
-                _copyVideoUrl = "Video-URL kopieren";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("it", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -143,8 +129,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Copia URL immagine";
                 _copyImage = "Copia immagine";
                 _saveImage = "Salva immagine con nome...";
-                _openVideo = "Apri il video";
-                _copyVideoUrl = "Copia URL video";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("es", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -155,8 +139,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Copiar URL de la imagen";
                 _copyImage = "Copiar imagen";
                 _saveImage = "Guardar imagen como...";
-                _openVideo = "Abrir video";
-                _copyVideoUrl = "Copiar URL de la video";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("ru", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -167,8 +149,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Копировать адрес изображения";
                 _copyImage = "Копировать изображение";
                 _saveImage = "Сохранить изображение как...";
-                _openVideo = "Открыть видео";
-                _copyVideoUrl = "Копировать адрес видео";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("sv", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -179,8 +159,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Kopiera bildens URL";
                 _copyImage = "Kopiera bild";
                 _saveImage = "Spara bild som...";
-                _openVideo = "Öppna video";
-                _copyVideoUrl = "Kopiera video URL";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("hu", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -191,8 +169,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Kép URL másolása";
                 _copyImage = "Kép másolása";
                 _saveImage = "Kép mentése másként...";
-                _openVideo = "Videó megnyitása";
-                _copyVideoUrl = "Videó URL másolása";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("cs", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -203,8 +179,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Kopírovat URL snímku";
                 _copyImage = "Kopírovat snímek";
                 _saveImage = "Uložit snímek jako...";
-                _openVideo = "Otevřít video";
-                _copyVideoUrl = "Kopírovat URL video";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("da", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -215,8 +189,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Kopier billede-URL";
                 _copyImage = "Kopier billede";
                 _saveImage = "Gem billede som...";
-                _openVideo = "Åbn video";
-                _copyVideoUrl = "Kopier video-URL";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("nl", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -227,8 +199,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "URL Afbeelding kopiëren";
                 _copyImage = "Afbeelding kopiëren";
                 _saveImage = "Bewaar afbeelding als...";
-                _openVideo = "Video openen";
-                _copyVideoUrl = "URL video kopiëren";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("fi", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -239,8 +209,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Kopioi kuvan URL";
                 _copyImage = "Kopioi kuva";
                 _saveImage = "Tallena kuva nimellä...";
-                _openVideo = "Avaa video";
-                _copyVideoUrl = "Kopioi video URL";
             }
             else
             {
@@ -251,8 +219,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 _copyImageLink = "Copy image URL";
                 _copyImage = "Copy image";
                 _saveImage = "Save image as...";
-                _openVideo = "Open video";
-                _copyVideoUrl = "Copy video URL";
             }
         }
 
@@ -289,20 +255,20 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
 
                 if (rect != null)
                 {
-                    bool isVideo = false;
+                    bool isEmbed = false;
                     if (link != null)
                     {
-                        isVideo = link is CssBoxFrame && ((CssBoxFrame)link).IsVideo;
+                        isEmbed = link is CssBoxFrame { IsEmbed: true };
                         var linkExist = !string.IsNullOrEmpty(link.HrefLink);
-                        _contextMenu.AddItem(isVideo ? _openVideo : _openLink, linkExist, OnOpenLinkClick);
+                        _contextMenu.AddItem(_openLink, linkExist, OnOpenLinkClick);
                         if (_htmlContainer.IsSelectionEnabled)
                         {
-                            _contextMenu.AddItem(isVideo ? _copyVideoUrl : _copyLink, linkExist, OnCopyLinkClick);
+                            _contextMenu.AddItem(_copyLink, linkExist, OnCopyLinkClick);
                         }
                         _contextMenu.AddDivider();
                     }
 
-                    if (rect.IsImage && !isVideo)
+                    if (rect.IsImage && !isEmbed)
                     {
                         _contextMenu.AddItem(_saveImage, rect.Image != null, OnSaveImageClick);
                         if (_htmlContainer.IsSelectionEnabled)

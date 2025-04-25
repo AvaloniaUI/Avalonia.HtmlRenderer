@@ -13,7 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Utils;
 
@@ -129,9 +129,18 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <returns>the loaded stylesheet string</returns>
         private static string LoadStylesheetFromUri(HtmlContainerInt htmlContainer, Uri uri)
         {
-            using (var client = new WebClient())
+            using (var client = new HttpClient())
             {
-                var stylesheet = client.DownloadString(uri);
+                using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+#if NET6_0_OR_GREATER
+                using var response = client.Send(request);
+                using var stream = response.Content.ReadAsStream();
+                using var sr = new StreamReader(stream);
+                var stylesheet = sr.ReadToEnd();
+#else
+                using var response = client.SendAsync(request).GetAwaiter().GetResult();
+                var stylesheet = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+#endif
                 try
                 {
                     stylesheet = CorrectRelativeUrls(stylesheet, uri);

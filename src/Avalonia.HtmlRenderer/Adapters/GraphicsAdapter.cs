@@ -42,7 +42,6 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// if to release the graphics object on dispose
         /// </summary>
         private readonly bool _releaseGraphics;
-        private readonly RRect _whiteSpaceSize;
 
         #endregion
 
