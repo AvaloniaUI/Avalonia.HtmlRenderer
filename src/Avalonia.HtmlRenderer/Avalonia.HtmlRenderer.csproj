@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../../external/HtmlRenderer/Core/Utils/ImageError.png">
+      <LogicalName>TheArtOfDev.HtmlRenderer.Core.Utils.ImageError.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../external/HtmlRenderer/Core/Utils/ImageLoad.png">
+      <LogicalName>TheArtOfDev.HtmlRenderer.Core.Utils.ImageLoad.png</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../../external/HtmlRenderer/Core/**/*.cs" Link="External/Core/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../../external/HtmlRenderer/Adapters/**/*.cs" Link="External/Adapters/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+
+  <Import Project="$(RepositoryPropsRoot)/PackEnable.targets" />
+</Project>

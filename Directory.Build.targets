@@ -1,0 +1,6 @@
+﻿<Project>
+
+<!--  <Import Project="$(RepositoryPropsRoot)/NullableEnable.targets" />-->
+<!--  <Import Project="$(RepositoryPropsRoot)/TrimmingEnable.targets" />-->
+
+</Project>

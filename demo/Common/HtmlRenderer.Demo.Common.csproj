@@ -112,9 +112,6 @@
     <EmbeddedResource Include="Resources\stopwatch.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Avalonia.HtmlRenderer\Avalonia.HtmlRenderer.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\image32.png" />
   </ItemGroup>
   <ItemGroup>
@@ -132,5 +129,8 @@
   <ItemGroup>
     <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Avalonia.HtmlRenderer\Avalonia.HtmlRenderer.csproj" />
   </ItemGroup>
 </Project>

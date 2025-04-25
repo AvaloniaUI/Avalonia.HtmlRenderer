@@ -1,0 +1,26 @@
+<Project>
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Authors>AvaloniaUI OÜ</Authors>
+    <Copyright>Copyright 2019-$([System.DateTime]::Now.ToString(`yyyy`)) &#169; AvaloniaUI OÜ</Copyright>
+
+    <PackageProjectUrl>https://avaloniaui.net</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <DebugType Condition="$(ContinuousIntegrationBuild) == 'true'">embedded</DebugType>
+
+    <RepositoryUrl>https://github.com/AvaloniaUI/Avalonia.HtmlRenderer/</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version Condition="'$(GITHUB_REF_TYPE)' == 'branch' AND '$(GITHUB_RUN_NUMBER)' != '' AND '$(Version)' != ''">$(Version)-cibuild-$([System.String]::Format('{0:00000000}', $([MSBuild]::Add($(GITHUB_RUN_NUMBER), 0))))</Version>
+    <Version Condition="'$(GITHUB_REF_TYPE)' == 'tag' AND '$(GITHUB_RUN_NUMBER)' != ''">$(GITHUB_REF_NAME)</Version>
+  </PropertyGroup>
+
+  <ItemGroup Label="PackageIcon">
+    <None Include="$(MSBuildThisFileDirectory)/../../branding/icon.png" Pack="true" Visible="false" PackagePath=""/>
+  </ItemGroup>
+</Project>

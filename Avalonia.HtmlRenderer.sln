@@ -5,31 +5,46 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{5006B06E-934C-4056-A135-2C44D3572FD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avalonia.HtmlRenderer", "Avalonia.HtmlRenderer\Avalonia.HtmlRenderer.csproj", "{AD54A74B-41CC-491E-BF98-EBB86CE2E690}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Common", "demo\Common\HtmlRenderer.Demo.Common.csproj", "{EFEA3578-F417-44F1-AD7A-FA85F505A246}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Common", "Demo\Common\HtmlRenderer.Demo.Common.csproj", "{EFEA3578-F417-44F1-AD7A-FA85F505A246}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia", "demo\Avalonia\HtmlRenderer.Demo.Avalonia\HtmlRenderer.Demo.Avalonia.csproj", "{C05D1010-8831-486D-AB2F-7AD871C1075B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia", "Demo\Avalonia\HtmlRenderer.Demo.Avalonia\HtmlRenderer.Demo.Avalonia.csproj", "{C05D1010-8831-486D-AB2F-7AD871C1075B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.Desktop", "demo\Avalonia\HtmlRenderer.Demo.Avalonia.Desktop\HtmlRenderer.Demo.Avalonia.Desktop.csproj", "{D193E320-E26F-45F3-984F-D6CE3E8D94AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.Desktop", "Demo\Avalonia\HtmlRenderer.Demo.Avalonia.Desktop\HtmlRenderer.Demo.Avalonia.Desktop.csproj", "{D193E320-E26F-45F3-984F-D6CE3E8D94AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.Browser", "demo\Avalonia\HtmlRenderer.Demo.Avalonia.Browser\HtmlRenderer.Demo.Avalonia.Browser.csproj", "{AE75BC50-A28F-4F98-AE21-567EF37754D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.Browser", "Demo\Avalonia\HtmlRenderer.Demo.Avalonia.Browser\HtmlRenderer.Demo.Avalonia.Browser.csproj", "{AE75BC50-A28F-4F98-AE21-567EF37754D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.iOS", "demo\Avalonia\HtmlRenderer.Demo.Avalonia.iOS\HtmlRenderer.Demo.Avalonia.iOS.csproj", "{E67C2720-C146-46CE-8E1B-410A53C987EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.iOS", "Demo\Avalonia\HtmlRenderer.Demo.Avalonia.iOS\HtmlRenderer.Demo.Avalonia.iOS.csproj", "{E67C2720-C146-46CE-8E1B-410A53C987EC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.Android", "Demo\Avalonia\HtmlRenderer.Demo.Avalonia.Android\HtmlRenderer.Demo.Avalonia.Android.csproj", "{EE38FD55-C381-4C06-BA49-26E5729D19A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlRenderer.Demo.Avalonia.Android", "demo\Avalonia\HtmlRenderer.Demo.Avalonia.Android\HtmlRenderer.Demo.Avalonia.Android.csproj", "{EE38FD55-C381-4C06-BA49-26E5729D19A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DEDA2C34-DB08-4B8F-ABD8-326AA87E3054}"
 	ProjectSection(SolutionItems) = preProject
-		..\.editorconfig = ..\.editorconfig
-		..\.gitattributes = ..\.gitattributes
-		..\.gitignore = ..\.gitignore
-		..\html.ico = ..\html.ico
-		..\licence.md = ..\licence.md
-		..\README.md = ..\README.md
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		html.ico = html.ico
+		licence.md = licence.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{3DBDAC6D-643D-4F3F-8FB7-A684EF7659F8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\main.yml = .github\workflows\main.yml
+		build\avalonia.snk = build\avalonia.snk
+		build\icon.png = build\icon.png
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{43EB25B1-77DA-4881-A750-E5080EB13A88}"
+	ProjectSection(SolutionItems) = preProject
+		build\Props\NullableEnable.targets = build\Props\NullableEnable.targets
+		build\Props\PackEnable.targets = build\Props\PackEnable.targets
+		build\Props\SignEnable.targets = build\Props\SignEnable.targets
+		build\Props\TrimmingEnable.targets = build\Props\TrimmingEnable.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avalonia.HtmlRenderer", "src\Avalonia.HtmlRenderer\Avalonia.HtmlRenderer.csproj", "{B6C888F6-9BF3-477B-834B-8646843FE41D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,10 +55,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AD54A74B-41CC-491E-BF98-EBB86CE2E690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD54A74B-41CC-491E-BF98-EBB86CE2E690}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD54A74B-41CC-491E-BF98-EBB86CE2E690}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD54A74B-41CC-491E-BF98-EBB86CE2E690}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EFEA3578-F417-44F1-AD7A-FA85F505A246}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EFEA3578-F417-44F1-AD7A-FA85F505A246}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFEA3578-F417-44F1-AD7A-FA85F505A246}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -68,6 +79,10 @@ Global
 		{EE38FD55-C381-4C06-BA49-26E5729D19A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE38FD55-C381-4C06-BA49-26E5729D19A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE38FD55-C381-4C06-BA49-26E5729D19A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6C888F6-9BF3-477B-834B-8646843FE41D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C888F6-9BF3-477B-834B-8646843FE41D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6C888F6-9BF3-477B-834B-8646843FE41D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C888F6-9BF3-477B-834B-8646843FE41D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EFEA3578-F417-44F1-AD7A-FA85F505A246} = {5006B06E-934C-4056-A135-2C44D3572FD3}
@@ -76,5 +91,6 @@ Global
 		{AE75BC50-A28F-4F98-AE21-567EF37754D5} = {5006B06E-934C-4056-A135-2C44D3572FD3}
 		{E67C2720-C146-46CE-8E1B-410A53C987EC} = {5006B06E-934C-4056-A135-2C44D3572FD3}
 		{EE38FD55-C381-4C06-BA49-26E5729D19A6} = {5006B06E-934C-4056-A135-2C44D3572FD3}
+		{43EB25B1-77DA-4881-A750-E5080EB13A88} = {3DBDAC6D-643D-4F3F-8FB7-A684EF7659F8}
 	EndGlobalSection
 EndGlobal
