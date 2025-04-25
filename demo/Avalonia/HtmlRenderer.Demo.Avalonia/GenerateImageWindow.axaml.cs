@@ -25,7 +25,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
     public partial class GenerateImageWindow : Window
     {
         private readonly string _html;
-        private Bitmap _generatedImage;
+        private Bitmap? _generatedImage;
 
         public GenerateImageWindow(string html)
         {
@@ -59,7 +59,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
             var stream = await file.OpenWriteAsync();
 #endif
             
-            _generatedImage.Save(stream);
+            _generatedImage?.Save(stream);
 
             await stream.FlushAsync();
         }

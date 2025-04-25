@@ -21,13 +21,13 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
 {
     public class ToolStripImageConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             var imageStream = typeof(Resources).Assembly.GetManifestResourceStream("TheArtOfDev.HtmlRenderer.Demo.Common.Resources." + parameter + ".png");
-            return HtmlRenderingHelper.ImageFromStream(imageStream);
+            return imageStream is null ? null : HtmlRenderingHelper.ImageFromStream(imageStream);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             return null;
         }

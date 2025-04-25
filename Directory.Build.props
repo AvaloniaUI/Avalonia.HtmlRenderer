@@ -12,7 +12,7 @@
   <PropertyGroup>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <AvaloniaVersion>11.0.11</AvaloniaVersion>
-    <AvaloniaSamplesVersion>11.2.8</AvaloniaSamplesVersion>
+    <AvaloniaSamplesVersion>11.3.0-beta2</AvaloniaSamplesVersion>
   </PropertyGroup>
 
 </Project>

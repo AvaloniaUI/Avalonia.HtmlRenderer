@@ -61,7 +61,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
 
         public MainControl()
         {
-            SamplesLoader.Init("Avalonia", typeof(HtmlRender).Assembly.GetName().Version.ToString());
+            SamplesLoader.Init("Avalonia", typeof(HtmlRender).Assembly.GetName().Version!.ToString());
 
             InitializeComponent();
 
@@ -161,7 +161,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
             showcaseRoot.IsExpanded = true;
             
             if (((ItemCollection)showcaseRoot.Items!).Count > 0)
-                ((TreeViewItem)((ItemCollection)showcaseRoot.Items!)[0]).IsSelected = true;
+                ((TreeViewItem)((ItemCollection)showcaseRoot.Items!)[0]!).IsSelected = true;
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// </summary>
         private void AddTreeItem(TreeViewItem root, HtmlSample sample)
         {
-            var html = sample.Html.Replace("$$Release$$", _htmlPanel.GetType().Assembly.GetName().Version.ToString());
+            var html = sample.Html.Replace("$$Release$$", _htmlPanel.GetType().Assembly.GetName().Version!.ToString());
 
             var node = new TreeViewItem();
             node.Header = sample.Name;
@@ -221,7 +221,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// <summary>
         /// Update the html renderer with text from html editor.
         /// </summary>
-        private void OnUpdateHtmlTimerTick(object state)
+        private void OnUpdateHtmlTimerTick(object? state)
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -278,7 +278,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// <summary>
         /// Show error raised from html renderer.
         /// </summary>
-        private void OnRenderError(object sender, HtmlRendererRoutedEventArgs<HtmlRenderErrorEventArgs> args)
+        private void OnRenderError(object? sender, HtmlRendererRoutedEventArgs<HtmlRenderErrorEventArgs> args)
         {
             Dispatcher.UIThread.InvokeAsync(() => MessageBox(args.Event.Message + (args.Event.Exception != null ? "\r\n" + args.Event.Exception : null), "Error in Html Renderer"));
         }
@@ -286,7 +286,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// <summary>
         /// On specific link click handle it here.
         /// </summary>
-        private void OnLinkClicked(object sender, HtmlRendererRoutedEventArgs<HtmlLinkClickedEventArgs> args)
+        private void OnLinkClicked(object? sender, HtmlRendererRoutedEventArgs<HtmlLinkClickedEventArgs> args)
         {
             if (args.Event.Link == "SayHello")
             {
@@ -312,10 +312,10 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// </summary>
         private string GetHtmlEditorText()
         {
-            return _htmlEditor.Text;
+            return _htmlEditor.Text ?? "";
         }
 
-        private void MessageBox(string text, string title = null)
+        private void MessageBox(string text, string? title = null)
         {
             var window = new Window
             {

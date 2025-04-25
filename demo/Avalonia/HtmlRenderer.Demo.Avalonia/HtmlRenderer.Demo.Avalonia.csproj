@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="fonts\CustomFont.ttf" />
@@ -12,5 +12,9 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="$(AvaloniaSamplesVersion)" />
     <PackageReference Include="Avalonia.Themes.Simple" Version="$(AvaloniaSamplesVersion)" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.*">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>

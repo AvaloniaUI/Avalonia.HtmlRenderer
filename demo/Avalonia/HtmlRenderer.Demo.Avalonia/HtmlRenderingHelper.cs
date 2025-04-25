@@ -36,7 +36,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// <summary>
         /// Handle stylesheet resolve.
         /// </summary>
-        public static void OnStylesheetLoad(object sender, HtmlRendererRoutedEventArgs<HtmlStylesheetLoadEventArgs> args)
+        public static void OnStylesheetLoad(object? sender, HtmlRendererRoutedEventArgs<HtmlStylesheetLoadEventArgs> args)
         {
             DemoUtils.OnStylesheetLoad(sender, args.Event);
         }
@@ -44,10 +44,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// <summary>
         /// Get image by resource key.
         /// </summary>
-        public static Bitmap TryLoadResourceImage(string src)
+        public static Bitmap? TryLoadResourceImage(string src)
         {
-            Bitmap image;
-            if (!_imageCache.TryGetValue(src, out image))
+            if (!_imageCache.TryGetValue(src, out var image))
             {
                 var imageStream = DemoUtils.GetImageStream(src);
                 if (imageStream != null)
@@ -70,7 +69,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// <summary>
         /// On image load in renderer set the image by event async.
         /// </summary>
-        public static void OnImageLoad(object sender, HtmlRendererRoutedEventArgs<HtmlImageLoadEventArgs> args)
+        public static void OnImageLoad(object? sender, HtmlRendererRoutedEventArgs<HtmlImageLoadEventArgs> args)
         {
             ImageLoad(args.Event);
         }
@@ -78,7 +77,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// <summary>
         /// On image load in renderer set the image by event async.
         /// </summary>
-        public static void OnImageLoad(object sender, HtmlImageLoadEventArgs args)
+        public static void OnImageLoad(object? sender, HtmlImageLoadEventArgs args)
         {
             ImageLoad(args);
         }
