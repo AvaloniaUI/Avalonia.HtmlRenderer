@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Avalonia.Controls.Documents;
+using Avalonia.Media.TextFormatting.Unicode;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
@@ -557,53 +558,78 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         {
             _boxWords.Clear();
 
-            int startIdx = 0;
             bool preserveSpaces = WhiteSpace == CssConstants.Pre || WhiteSpace == CssConstants.PreWrap;
-            bool respoctNewline = preserveSpaces || WhiteSpace == CssConstants.PreLine;
+            bool respectNewline = preserveSpaces || WhiteSpace == CssConstants.PreLine;
             var text = _text.Span;
-            while (startIdx < text.Length)
+            GraphemeEnumerator graphemeEnumerator = new(text);
+
+            int length = 0;
+            int whiteSpaceLength = 0;
+            while (graphemeEnumerator.MoveNext(out var grapheme))
             {
-                while (startIdx < text.Length && text[startIdx] == '\r')
-                    startIdx++;
+                var isRealWhiteSpace = grapheme.FirstCodepoint.IsWhiteSpace && !grapheme.FirstCodepoint.IsBreakChar;
+                var shouldGroup = !grapheme.FirstCodepoint.IsWhiteSpace && !CommonUtils.IsAsianCharecter(text[grapheme.Offset]) && (!char.IsPunctuation(text[grapheme.Offset]) || grapheme.FirstCodepoint == '-') && WordBreak != CssConstants.BreakAll;
 
-                if (startIdx < text.Length)
+
+                if ((!shouldGroup && length > 0) || (grapheme.Offset > 0 && text[grapheme.Offset - 1] == '-'))
                 {
-                    var endIdx = startIdx;
-                    while (endIdx < text.Length && char.IsWhiteSpace(text[endIdx]) && text[endIdx] != '\n')
-                        endIdx++;
-
-                    if (endIdx > startIdx)
-                    {
-                        if (preserveSpaces)
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(startIdx, endIdx - startIdx).ToString()).AsMemory(), false, false));
-                    }
-                    else
-                    {
-                        endIdx = startIdx;
-                        while (endIdx < text.Length && !char.IsWhiteSpace(text[endIdx]) && text[endIdx] != '-' && WordBreak != CssConstants.BreakAll && !CommonUtils.IsAsianCharecter(text[endIdx]))
-                            endIdx++;
-
-                        if (endIdx < text.Length && (text[endIdx] == '-' || WordBreak == CssConstants.BreakAll || CommonUtils.IsAsianCharecter(text[endIdx])))
-                            endIdx++;
-
-                        if (endIdx > startIdx)
-                        {
-                            var hasSpaceBefore = !preserveSpaces && (startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[startIdx - 1]));
-                            var hasSpaceAfter = !preserveSpaces && (endIdx < text.Length && char.IsWhiteSpace(text[endIdx]));
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(startIdx, endIdx - startIdx).ToString()).AsMemory(), hasSpaceBefore, hasSpaceAfter));
-                        }
-                    }
-
-                    // create new-line word so it will effect the layout
-                    if (endIdx < text.Length && text[endIdx] == '\n')
-                    {
-                        endIdx++;
-                        if (respoctNewline)
-                            _boxWords.Add(new CssRectWord(this, "\n".AsMemory(), false, false));
-                    }
-
-                    startIdx = endIdx;
+                    var wordStart = grapheme.Offset - length;
+                    var hasSpaceBefore = !preserveSpaces && (wordStart > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[wordStart - 1]));
+                    var hasSpaceAfter = !preserveSpaces && (char.IsWhiteSpace(text[grapheme.Offset]));
+                    _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(wordStart, length).ToString()).AsMemory(), hasSpaceBefore, hasSpaceAfter));
+                    length = 0;
                 }
+                else if (!isRealWhiteSpace && whiteSpaceLength > 0)
+                {
+                    if (preserveSpaces)
+                        _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(grapheme.Offset - whiteSpaceLength, whiteSpaceLength).ToString()).AsMemory(), false, false));
+                    whiteSpaceLength = 0;
+                }
+
+                // Ignore this
+                if (grapheme.FirstCodepoint == '\r')
+                {
+                }
+
+                // New line characters
+                else if (grapheme.FirstCodepoint.IsBreakChar)
+                {
+                    if (respectNewline)
+                        _boxWords.Add(new CssRectWord(this, "\n".AsMemory(), false, false));
+                }
+
+                // Grouped white spaces
+                else if (isRealWhiteSpace)
+                {
+                    whiteSpaceLength += grapheme.Length;
+                }
+
+                // Grouped chars other than Asians and Punctuations
+                // Codepoint.FirstCodepoint.IsEastAsian isn't yet supported in Avalonia 11.1.0
+                else if (shouldGroup)
+                {
+                    length += grapheme.Length;
+                }
+
+                // Single
+                else if (!shouldGroup)
+                {
+                    var hasSpaceBefore = !preserveSpaces && (grapheme.Offset > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[grapheme.Offset - 1]));
+                    var hasSpaceAfter = !preserveSpaces && (grapheme.Offset + grapheme.Length < text.Length && char.IsWhiteSpace(text[grapheme.Offset + grapheme.Length]));
+                    _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(grapheme.Offset, grapheme.Length).ToString()).AsMemory(), hasSpaceBefore, hasSpaceAfter));
+                }
+            }
+
+            // For the last group
+            if (whiteSpaceLength > 0 && preserveSpaces)
+            {
+                _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(text.Length - whiteSpaceLength, whiteSpaceLength).ToString()).AsMemory(), false, false));
+            }
+            else if (length > 0)
+            {
+                var wordStart = text.Length - length;
+                var hasSpaceBefore = !preserveSpaces && (wordStart > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[wordStart - 1]));
+                _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(text.Length - length, length).ToString()).AsMemory(), hasSpaceBefore, false));
             }
         }
 
