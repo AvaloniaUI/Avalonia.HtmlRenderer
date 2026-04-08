@@ -73,7 +73,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 #pragma warning disable CS0618 // Type or member is obsolete
             var emHeight = _glyphTypeface.Metrics.DesignEmHeight;
             _height = 96d / 72d * (_size / emHeight) * _glyphTypeface.Metrics.LineSpacing;
-            _underlineOffset = 96d / 72d * (_size / emHeight) * (_glyphTypeface.Metrics.LineSpacing + _glyphTypeface.Metrics.UnderlinePosition);
+            _underlineOffset = 96d / 72d * (_size / emHeight) * (-_glyphTypeface.Metrics.Ascent + _glyphTypeface.Metrics.UnderlinePosition);
 
             TextRunProperties = new GenericTextRunProperties(font, 96d / 72d * size, null, null, null, BaselineAlignment.Baseline, CultureInfo.CurrentCulture);
             TextParagraphProperties = new GenericTextParagraphProperties(TextRunProperties, textWrap: TextWrapping.Wrap);
