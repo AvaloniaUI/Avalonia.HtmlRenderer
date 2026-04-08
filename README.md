@@ -1,3 +1,5 @@
+![License](https://img.shields.io/github/license/avaloniaui/avalonia.svg) [![NuGet](https://img.shields.io/nuget/v/Avalonia.HtmlRenderer.svg)](https://www.nuget.org/packages/Avalonia.HtmlRenderer) [![downloads](https://img.shields.io/nuget/dt/avalonia.htmlrenderer)](https://www.nuget.org/packages/Avalonia.HtmlRenderer)
+
 # Avalonia.HtmlRenderer
 
 Avalonia port of the https://github.com/ArthurHub/HTML-Renderer project.
@@ -8,7 +10,6 @@ Many modern HTML features are not supported.
 
 For samples, see Demo project.
 
-NuGet: https://www.nuget.org/packages/Avalonia.HtmlRenderer/12.0.0
 ```xml
 <PackageReference Include="Avalonia.HtmlRenderer" Version="12.0.0" />
 ```
