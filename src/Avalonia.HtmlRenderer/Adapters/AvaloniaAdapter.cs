@@ -18,6 +18,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Media.Immutable;
@@ -34,6 +35,13 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
     /// </summary>
     internal sealed class AvaloniaAdapter : RAdapter
     {
+        // TODO: it doesn't work on Windows, because Avalonia doesn't prepend html clipboard header.
+        private static readonly DataFormat<string> s_htmlFormat = DataFormat
+            .CreateStringPlatformFormat(
+                OperatingSystem.IsMacOS() || OperatingSystem.IsIOS() ? "public.html"
+                : OperatingSystem.IsWindows() ? "HTML Format"
+                : "text/html");
+
         private readonly Control _hostControl;
 
         private static readonly List<string> ValidColorNamesLc;
@@ -123,9 +131,12 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         protected override object GetClipboardDataObjectInt(string html, string plainText)
         {
-            var dataObject = new DataObject();
-            dataObject.Set(DataFormats.Text, plainText);
-            return dataObject;
+            var dataTransfer = new DataTransfer();
+            var transferItem = new DataTransferItem();
+            transferItem.SetText(plainText);
+            transferItem.Set(s_htmlFormat, html);
+            dataTransfer.Add(transferItem);
+            return dataTransfer;
         }
 
         protected override void SetToClipboardInt(string text)
@@ -143,13 +154,15 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         protected override void SetToClipboardInt(string html, string plainText)
         {
             var topLevel = TryGetTopLevel();
-            _ = topLevel?.Clipboard?.SetTextAsync(plainText);
+            var dataTransfer = (DataTransfer)GetClipboardDataObjectInt(html, plainText);
+            _ = topLevel?.Clipboard?.SetDataAsync(dataTransfer);
         }
 
         protected override void SetToClipboardInt(RImage image)
         {
-            //Do not crash, just ignore
-            //TODO: implement image clipboard support
+            var bitmap = ((ImageAdapter)image).Image;
+            var topLevel = TryGetTopLevel();
+            _ = topLevel?.Clipboard?.SetBitmapAsync(bitmap);
         }
 
         protected override RContextMenu CreateContextMenuInt()
@@ -241,7 +254,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
                    ?? (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow
                    ?? TopLevel.GetTopLevel((Application.Current?.ApplicationLifetime as ISingleViewApplicationLifetime)?.MainView);
         }
-        
+
         #endregion
     }
 }

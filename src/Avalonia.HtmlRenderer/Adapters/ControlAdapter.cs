@@ -83,10 +83,10 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
 
         public override void DoDragDropCopy(object dragDropData)
         {
-            var args = (_control as HtmlControl)?.LastPointerArgs;
+            var args = (_control as HtmlControl)?.LastPointerPressedArgs;
             if (args != null)
             {
-                DragDrop.DoDragDrop(args, (IDataObject)dragDropData, DragDropEffects.Copy);
+                DragDrop.DoDragDropAsync(args, (DataTransfer)dragDropData, DragDropEffects.Copy);
             }
         }
 

@@ -34,7 +34,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
         /// <summary>
         /// The glyph font for the font
         /// </summary>
-        private readonly IGlyphTypeface _glyphTypeface;
+        private readonly GlyphTypeface _glyphTypeface;
 
         /// <summary>
         /// the size of the font
@@ -76,7 +76,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             _underlineOffset = 96d / 72d * (_size / emHeight) * (-_glyphTypeface.Metrics.Ascent + _glyphTypeface.Metrics.UnderlinePosition);
 
             TextRunProperties = new GenericTextRunProperties(font, 96d / 72d * size, null, null, null, BaselineAlignment.Baseline, CultureInfo.CurrentCulture);
-            TextParagraphProperties = new GenericTextParagraphProperties(TextRunProperties, textWrap: TextWrapping.Wrap);
+            TextParagraphProperties = new GenericTextParagraphProperties(TextRunProperties, textWrapping: TextWrapping.Wrap);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -92,7 +92,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
             get { return _font; }
         }
 
-        public IGlyphTypeface GlyphTypeface
+        public GlyphTypeface GlyphTypeface
         {
             get { return _glyphTypeface; }
         }

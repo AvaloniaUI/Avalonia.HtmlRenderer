@@ -121,6 +121,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         #endregion
 
         internal PointerEventArgs LastPointerArgs { get; private set; }
+        internal PointerPressedEventArgs LastPointerPressedArgs { get; private set; }
 
         /// <summary>
         /// Creates a new HtmlPanel and sets a basic css for it's styling.
@@ -143,17 +144,25 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
             PointerExited += (sender, e) =>
             {
                 LastPointerArgs = null;
+                LastPointerPressedArgs = null;
                 _htmlContainer.HandleMouseLeave(this);
             };
             PointerPressed += (sender, e) =>
             {
                 LastPointerArgs = e;
+                LastPointerPressedArgs = e;
                 _htmlContainer?.HandleLeftMouseDown(this, e);
             };
             PointerReleased += (sender, e) =>
             {
                 LastPointerArgs = e;
+                LastPointerPressedArgs = null;
                 _htmlContainer.HandleLeftMouseUp(this, e);
+            };
+            PointerCaptureLost += (sender, e) =>
+            {
+                LastPointerArgs = null;
+                LastPointerPressedArgs = null;
             };
             DoubleTapped += (sender, e) =>
             {
