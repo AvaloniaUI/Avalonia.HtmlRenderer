@@ -648,42 +648,31 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// move to a new line</param>
         private static void CorrectLineBreaksBlocks(CssBox box, ref bool followingBlock)
         {
-            followingBlock = followingBlock || box.IsBlock;
             foreach (var childBox in box.Boxes)
             {
                 CorrectLineBreaksBlocks(childBox, ref followingBlock);
-                followingBlock = childBox.Words.Count == 0 && (followingBlock || childBox.IsBlock);
-            }
 
-            int lastBr = -1;
-            CssBox brBox;
-            do
-            {
-                brBox = null;
-                for (int i = 0; i < box.Boxes.Count && brBox == null; i++)
+                if (childBox.IsBrElement)
                 {
-                    if (i > lastBr && box.Boxes[i].IsBrElement)
-                    {
-                        brBox = box.Boxes[i];
-                        lastBr = i;
-                    }
-                    else if (box.Boxes[i].Words.Count > 0)
-                    {
-                        followingBlock = false;
-                    }
-                    else if (box.Boxes[i].IsBlock)
-                    {
-                        followingBlock = true;
-                    }
-                }
+                    childBox.Display = CssConstants.Block;
 
-                if (brBox != null)
-                {
-                    brBox.Display = CssConstants.Block;
                     if (followingBlock)
-                        brBox.Height = ".95em"; // TODO:a check the height to min-height when it is supported
+                    {
+                        childBox.Height = ".95em"; // TODO:a check the height to min-height when it is supported
+                    }
+
+                    // after <br>, treat as if we just had a block so consecutive <br> will also create empty lines
+                    followingBlock = true;
                 }
-            } while (brBox != null);
+                else if (childBox.Words.Count > 0)
+                {
+                    followingBlock = false;
+                }
+                else if (childBox.IsBlock)
+                {
+                    followingBlock = true;
+                }
+            }
         }
 
         /// <summary>
