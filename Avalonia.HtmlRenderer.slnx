@@ -5,6 +5,7 @@
     <File Path="build/icon.png" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
   </Folder>
   <Folder Name="/Build/Props/">
     <File Path="build/Props/NullableEnable.targets" />

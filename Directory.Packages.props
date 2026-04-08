@@ -1,0 +1,23 @@
+<Project>
+
+  <PropertyGroup>
+    <AvaloniaVersion>11.1.0</AvaloniaVersion> <!-- Used in Avalonia.HtmlRenderer.csproj with VersionOverride -->
+    <AvaloniaSamplesVersion>11.3.13</AvaloniaSamplesVersion>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="Avalonia" Version="$(AvaloniaSamplesVersion)" />
+    <PackageVersion Include="Avalonia.Android" Version="$(AvaloniaSamplesVersion)" />
+    <PackageVersion Include="Avalonia.Browser" Version="$(AvaloniaSamplesVersion)" />
+    <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaSamplesVersion)" />
+    <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaSamplesVersion)" />
+    <PackageVersion Include="Avalonia.Themes.Simple" Version="$(AvaloniaSamplesVersion)" />
+    <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.0" />
+    <PackageVersion Include="System.Drawing.Common" Version="8.0.7" />
+    <PackageVersion Include="System.Resources.Extensions" Version="8.0.0" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.5" />
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.1" />
+  </ItemGroup>
+
+</Project>

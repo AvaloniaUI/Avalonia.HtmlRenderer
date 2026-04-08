@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia.Browser" Version="$(AvaloniaSamplesVersion)" />
+    <PackageReference Include="Avalonia.Browser" />
   </ItemGroup>
 
   <ItemGroup>

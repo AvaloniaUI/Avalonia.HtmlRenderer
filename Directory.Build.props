@@ -11,8 +11,6 @@
 
   <PropertyGroup>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <AvaloniaVersion>11.1.0</AvaloniaVersion>
-    <AvaloniaSamplesVersion>11.3.13</AvaloniaSamplesVersion>
   </PropertyGroup>
 
 </Project>

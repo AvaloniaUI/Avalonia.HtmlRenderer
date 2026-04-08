@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaSamplesVersion)" />
+    <PackageReference Include="Avalonia.Desktop" />
   </ItemGroup>
 
   <ItemGroup>
