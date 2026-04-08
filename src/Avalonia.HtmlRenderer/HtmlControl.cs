@@ -399,7 +399,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
                 if (!_lastScrollOffset.Equals(_htmlContainer.ScrollOffset))
                 {
                     _lastScrollOffset = _htmlContainer.ScrollOffset;
-                    InvokeMouseMove();
+                    Dispatcher.UIThread.InvokeAsync(InvokeMouseMove);
                 }
             }
         }
