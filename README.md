@@ -8,9 +8,9 @@ Many modern HTML features are not supported.
 
 For samples, see Demo project.
 
-NuGet: https://www.nuget.org/packages/Avalonia.HtmlRenderer/11.2.0
+NuGet: https://www.nuget.org/packages/Avalonia.HtmlRenderer/12.0.0
 ```xml
-<PackageReference Include="Avalonia.HtmlRenderer" Version="11.2.0" />
+<PackageReference Include="Avalonia.HtmlRenderer" Version="12.0.0" />
 ```
 
 
