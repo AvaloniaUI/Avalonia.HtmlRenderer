@@ -1,0 +1,32 @@
+<Solution>
+  <Folder Name="/Build/">
+    <File Path=".github/workflows/main.yml" />
+    <File Path="build/avalonia.snk" />
+    <File Path="build/icon.png" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+  </Folder>
+  <Folder Name="/Build/Props/">
+    <File Path="build/Props/NullableEnable.targets" />
+    <File Path="build/Props/PackEnable.targets" />
+    <File Path="build/Props/SignEnable.targets" />
+    <File Path="build/Props/TrimmingEnable.targets" />
+  </Folder>
+  <Folder Name="/Demo/">
+    <Project Path="demo/Avalonia/HtmlRenderer.Demo.Avalonia.Android/HtmlRenderer.Demo.Avalonia.Android.csproj" />
+    <Project Path="demo/Avalonia/HtmlRenderer.Demo.Avalonia.Browser/HtmlRenderer.Demo.Avalonia.Browser.csproj" />
+    <Project Path="demo/Avalonia/HtmlRenderer.Demo.Avalonia.Desktop/HtmlRenderer.Demo.Avalonia.Desktop.csproj" />
+    <Project Path="demo/Avalonia/HtmlRenderer.Demo.Avalonia.iOS/HtmlRenderer.Demo.Avalonia.iOS.csproj" />
+    <Project Path="demo/Avalonia/HtmlRenderer.Demo.Avalonia/HtmlRenderer.Demo.Avalonia.csproj" />
+    <Project Path="demo/Common/HtmlRenderer.Demo.Common.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="html.ico" />
+    <File Path="licence.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/Avalonia.HtmlRenderer/Avalonia.HtmlRenderer.csproj" />
+</Solution>
