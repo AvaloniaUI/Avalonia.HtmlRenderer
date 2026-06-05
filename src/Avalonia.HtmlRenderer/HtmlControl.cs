@@ -299,7 +299,7 @@ namespace TheArtOfDev.HtmlRenderer.Avalonia
         public IBrush BorderBrush
         {
             get { return (IBrush)GetValue(BorderBrushProperty); }
-            set { SetValue(BorderThicknessProperty, value); }
+            set { SetValue(BorderBrushProperty, value); }
         }
 
         public Thickness Padding
