@@ -150,14 +150,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             int prevIdx = 0, startIdx = 0;
             while (startIdx > -1 && startIdx < stylesheet.Length)
             {
-                startIdx = stylesheet.IndexOf("/*", startIdx);
+                startIdx = stylesheet.IndexOf("/*", startIdx, StringComparison.Ordinal);
                 if (startIdx > -1)
                 {
                     if (sb == null)
                         sb = new StringBuilder(stylesheet.Length);
                     sb.Append(stylesheet.Substring(prevIdx, startIdx - prevIdx));
 
-                    var endIdx = stylesheet.IndexOf("*/", startIdx + 2);
+                    var endIdx = stylesheet.IndexOf("*/", startIdx + 2, StringComparison.Ordinal);
                     if (endIdx < 0)
                         endIdx = stylesheet.Length;
 
@@ -277,7 +277,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         private void FeedStyleBlock(CssData cssData, string block, string media = "all")
         {
             int startIdx = block.IndexOf("{", StringComparison.Ordinal);
-            int endIdx = startIdx > -1 ? block.IndexOf("}", startIdx) : -1;
+            int endIdx = startIdx > -1 ? block.IndexOf('}', startIdx) : -1;
             if (startIdx > -1 && endIdx > -1)
             {
                 string blockSource = block.Substring(startIdx + 1, endIdx - startIdx - 1);
